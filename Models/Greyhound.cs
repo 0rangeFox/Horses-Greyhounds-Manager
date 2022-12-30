@@ -1,9 +1,7 @@
-using HaGManager.Extensions;
-
 namespace HaGManager.Models;
 
-public class Greyhound: Animal {
+public class Greyhound : Animal {
 
-    public Greyhound(string name) : base(name) {}
+    public Greyhound(string name) : base(name) { }
 
 }

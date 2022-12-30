@@ -1,4 +1,4 @@
-namespace HaGManager.Models; 
+namespace HaGManager.Models;
 
 public enum Reward {
 

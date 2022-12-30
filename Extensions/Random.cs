@@ -1,4 +1,4 @@
-namespace HaGManager.Extensions; 
+namespace HaGManager.Extensions;
 
 public static class RandomExtension {
 

@@ -5,20 +5,18 @@ namespace HaGManager;
 
 internal class Program {
 
-    public static bool Stop = false;
+    public static bool Stop;
     public static int Time = 0;
-    public static List<Team> Teams = new List<Team>();
+    public static List<Team> Teams = new();
 
-    private static List<Option> menus = new List<Option> {
-        new Option("Start new game"),
-        new Option("Load game"),
-        new Option("Credits"),
-        new Option("Exit", () => {
-            Stop = !Stop;
-        })
+    private static List<Option> menus = new() {
+        new("Start new game"),
+        new("Load game"),
+        new("Credits"),
+        new("Exit", () => { Stop = !Stop; })
     };
 
-    static void Main(string[] args) {
+    private static void Main(string[] args) {
         LoadGame();
 
         // do {
@@ -42,7 +40,7 @@ internal class Program {
     private static void LoadGame() {
         Console.WriteLine("Loading the game...");
     }
-    
+
     private static void SaveGame() {
         Console.WriteLine("Saving the game...");
     }

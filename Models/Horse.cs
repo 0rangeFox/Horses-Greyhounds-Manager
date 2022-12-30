@@ -1,10 +1,10 @@
-namespace HaGManager.Models;
-
 using HaGManager.Extensions;
 
-public class Horse: Animal {
+namespace HaGManager.Models;
 
-    float Energy { get; }
+public class Horse : Animal {
+
+    private float Energy { get; }
 
     public Horse(string name) : base(name) {
         this.Energy = RandomExtension.NextSingle(0, 100);

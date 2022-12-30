@@ -1,4 +1,4 @@
-namespace HaGManager.Models; 
+namespace HaGManager.Models;
 
 public class Match {
 
@@ -8,16 +8,14 @@ public class Match {
 
     public Match(int date) {
         var random = new Random();
-        Teams = new List<Team>(random.Next(4, 6));
-        Checkpoints = random.Next(2, 15);
-        CreatedDate = date;
+        this.Teams = new List<Team>(random.Next(4, 6));
+        this.Checkpoints = random.Next(2, 15);
+        this.CreatedDate = date;
     }
 
     // Game loop
     public void Start() {
-        if (this.Teams.Capacity == this.Teams.Count) {
-            
-        }
+        if (this.Teams.Capacity == this.Teams.Count) { }
     }
 
 }

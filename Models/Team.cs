@@ -2,7 +2,7 @@ namespace HaGManager.Models;
 
 public class Team {
 
-    public static Dictionary<int, Reward> Rewards = new Dictionary<int, Reward> {
+    public static Dictionary<int, Reward> Rewards = new() {
         [1000] = Reward.HorseSlot,
         //[2000] = Reward.HorseSlot,
         [3000] = Reward.Money500,
@@ -12,13 +12,12 @@ public class Team {
 
     public string Name { get; }
     public float Balance { get; private set; } = 500f;
-
-    public Dictionary<StaffType, StaffContract> Staffs = new Dictionary<StaffType, StaffContract>();
-    public List<Horse> Horses { get; } = new List<Horse>();
+    public List<Horse> Horses { get; } = new();
     public Greyhound Greyhound { get; }
+    public Dictionary<StaffType, StaffContract> Staffs = new();
 
     // Stats
-    public int Experience { get; private set; } = 0;
+    public int Experience { get; private set; }
     public int Wins { get; private set; }
     public int Loses { get; private set; }
 
@@ -45,14 +44,14 @@ public class Team {
     }
 
     public int GetFreeHorsesSlots() {
-        return this.GetMaxHorsesSlots() - this.Horses.Count;
+        return GetMaxHorsesSlots() - this.Horses.Count;
     }
 
     public float AddMoney(float amount) {
         return this.Balance += amount;
     }
 
-    
+
     // TODO Fix this code to not repeat the old rewards.
     public int AddExperience(int amount) {
         //this.Experience += amount;
@@ -62,11 +61,9 @@ public class Team {
             //     this.Balance += (int) reward.Value;
             //     Console.WriteLine($"The team \"{this.Name}\" has leveled up!");
             // }
-            if (this.Experience < reward.Key) {
-                this.Experience += amount;
-            } //else if ()
-        
-        
+            if (this.Experience < reward.Key)
+                this.Experience += amount; //else if ()
+
 
         return this.Experience;
     }

@@ -3,17 +3,19 @@ using HaGManager.Extensions;
 namespace HaGManager.Models;
 
 public enum Disease {
+
     BoneBroken
+
 }
 
 public abstract class Animal {
 
-    string Name { get; }
-    float Speed { get; }
-    float Resistance { get; }
-    float Weight { get; }
+    private string Name { get; }
+    private float Speed { get; }
+    private float Resistance { get; }
+    private float Weight { get; }
 
-    List<Disease> Diseases { get; }
+    private List<Disease> Diseases { get; }
 
     protected Animal(string name) {
         var random = new Random();
@@ -24,6 +26,6 @@ public abstract class Animal {
         this.Weight = RandomExtension.NextSingle(0, 100, random);
 
         this.Diseases = new List<Disease>();
-    }
+    }    
 
 }
