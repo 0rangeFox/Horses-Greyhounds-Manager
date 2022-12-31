@@ -1,5 +1,6 @@
-﻿using HaGManager.Helpers.Menus;
+﻿using HaGManager.Helpers.Views;
 using HaGManager.Models;
+using HaGManager.Views;
 
 namespace HaGManager;
 
@@ -9,15 +10,11 @@ internal class Program {
     public static int Time = 0;
     public static List<Team> Teams = new();
 
-    private static List<Option> menus = new() {
-        new("Start new game"),
-        new("Load game"),
-        new("Credits"),
-        new("Exit", () => { Stop = !Stop; })
-    };
-
     private static void Main(string[] args) {
         LoadGame();
+
+        Menu.Views.Push(new MainView());
+        new Menu();
 
         // do {
         //     Console.WriteLine($"Day: {Time}");
