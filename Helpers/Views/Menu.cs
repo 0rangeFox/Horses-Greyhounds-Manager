@@ -1,59 +1,58 @@
+using HaGManager.Extensions;
+using HaGManager.Views;
+
 namespace HaGManager.Helpers.Views;
 
 public class Menu {
 
-    public static Stack<IView> Views = new();
+    public static readonly Stack<IView> Views = new() {
+        new MainView()
+    };
+
+    private readonly IView _actualView;
+    private readonly int _actualIndex = 0;
 
     public Menu() {
         do {
-            var view = Views.Peek();
+            this._actualView = Views.Peek();
 
-            // Add Back or exit
-            var viewOptions = view.Options;
-            viewOptions.Add(new ViewOption(Views.Count > 1 ? "Back" : "Exit", (() => Views.Pop())));
+            this.GenerateViewVisual();
+            var keyInfo = Console.ReadKey();
 
-            // Set the default index of the selected item to be the first
-            var index = 0;
-            var removeView = false;
+            switch (keyInfo.Key) {
+                case ConsoleKey.DownArrow: {
+                    if (this._actualIndex < this._actualView.Options.Count)
+                        this._actualIndex++;
+                    break;
+                }
+                case ConsoleKey.UpArrow: {
+                    if (this._actualIndex - 1 >= 0)
+                        this._actualIndex--;
+                    break;
+                }
+            }
 
-            // Write the menu out
-            this.WriteMenu(viewOptions, viewOptions[index]);
+            // Handle different action for the option
+            if (keyInfo.Key != ConsoleKey.Enter) continue;
 
-            // Store key info in here
-            ConsoleKeyInfo keyinfo;
-            do {
-                keyinfo = Console.ReadKey();
-
-                // Handle each key input (down arrow will write the menu again with a different selected item)
-                if (keyinfo.Key == ConsoleKey.DownArrow)
-                    if (index + 1 < viewOptions.Count) {
-                        index++;
-                        this.WriteMenu(viewOptions, viewOptions[index]);
-                    }
-
-                if (keyinfo.Key == ConsoleKey.UpArrow)
-                    if (index - 1 >= 0) {
-                        index--;
-                        this.WriteMenu(viewOptions, viewOptions[index]);
-                    }
-
-                // Handle different action for the option
-                if (keyinfo.Key != ConsoleKey.Enter) continue;
-
-                if (index + 1 == viewOptions.Count)
-                    removeView = !removeView;
-
-                viewOptions[index].Selected?.Invoke();
-                index = 0;
-            } while (!removeView);
-        } while (Views.Count > 0);
+            if (this._actualIndex < this._actualView.Options.Count) {
+                Console.Clear();
+                this._actualView.Options[this._actualIndex].Selected?.Invoke();
+                this._actualIndex = 0;
+            } else Views.Pop();
+        } while (Game.Instance.Stop = Views.Count > 0);
     }
 
-    private void WriteMenu(List<ViewOption> options, ViewOption selectedOption) {
-        Console.Clear();
+    private void GenerateViewVisual() {
+        var viewOptions = new List<ViewOption>(this._actualView.Options) {
+            new(Views.Count > 1 ? "Back" : "Exit")
+        };
+        var actualViewOption = viewOptions[this._actualIndex];
 
-        foreach (var option in options) {
-            Console.Write(option == selectedOption ? "> " : " ");
+        Console.Clear();
+        Console.WriteLine($"Day: {Game.Instance.Time}");
+        foreach (var option in viewOptions) {
+            Console.Write(option == actualViewOption ? "> " : " ");
             Console.WriteLine(option.Name);
         }
     }
