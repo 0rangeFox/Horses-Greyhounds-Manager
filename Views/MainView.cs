@@ -8,10 +8,20 @@ public class MainView : IView {
 
     public MainView() {
         this.Options = new() {
-            new("Start new game"),
-            new("Load game", Game.Instance.LoadGame),
+            new("Start new game", NewGame),
+            new("Load game", LoadGame),
             new("Credits", Credits)
         };
+    }
+
+    private void NewGame() {
+        Console.WriteLine("Starting new game...");
+        new Game();
+    }
+
+    private void LoadGame() {
+        Console.WriteLine("Loading the game...");
+        new Game();
     }
 
     private void Credits() {

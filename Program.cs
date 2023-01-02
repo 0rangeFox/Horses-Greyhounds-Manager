@@ -1,9 +1,12 @@
-﻿namespace HaGManager;
+﻿using HaGManager.Helpers.Views;
+using HaGManager.Views;
+
+namespace HaGManager;
 
 internal class Program {
 
     private static void Main(string[] args) {
-        new Game();
+        new Menu(new MainView());
     }
 
 }

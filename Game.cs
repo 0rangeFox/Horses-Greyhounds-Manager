@@ -1,3 +1,4 @@
+using HaGManager.Extensions;
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
 using HaGManager.Views;
@@ -24,17 +25,21 @@ public class Game {
     public Game() {
         Game.Instance = this;
 
+        this.LoadGame();
+
         do {
-            new Menu();
+            foreach (var team in this.Teams.Shuffle()) {
+                new Menu(new GameView(team));
+            }
+
             this.Time++;
         } while (!this._stop);
 
         this.SaveGame();
     }
 
-    public void LoadGame() {
+    private void LoadGame() {
         Console.WriteLine("Loading the game...");
-        Console.ReadKey();
     }
 
     private void SaveGame() {
