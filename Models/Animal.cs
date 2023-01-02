@@ -10,12 +10,12 @@ public enum Disease {
 
 public abstract class Animal {
 
-    private string Name { get; }
-    private float Speed { get; }
-    private float Resistance { get; }
-    private float Weight { get; }
+    public string Name { get; }
+    public float Speed { get; }
+    public float Resistance { get; }
+    public float Weight { get; }
 
-    private List<Disease> Diseases { get; }
+    public List<Disease> Diseases { get; }
 
     protected Animal(string name) {
         var random = new Random();

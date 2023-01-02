@@ -1,35 +1,37 @@
 namespace HaGManager.Helpers.Views;
 
+public delegate void MenuAction(Menu menu);
+
 public class Menu {
 
     private readonly Stack<View> _views;
     private View? _actualView;
     private int _actualIndex = 0;
     private string? _returnMessage;
-    private Dictionary<ConsoleKey, Action?> _keysActions;
+    private Dictionary<ConsoleKey, MenuAction?> _keysActions;
 
     public Stack<View> Views => this._views;
 
-    public Menu(View view, string? returnMessage = null, Dictionary<ConsoleKey, Action?>? customKeyActions = null) {
+    public Menu(View view, string? returnMessage = null, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
         this._views = new Stack<View>(new []{ view });
         this.Initialize(returnMessage, customKeyActions);
     }
 
-    public Menu(ICollection<View> views, string? returnMessage = null, Dictionary<ConsoleKey, Action?>? customKeyActions = null) {
+    public Menu(ICollection<View> views, string? returnMessage = null, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
         this._views = new Stack<View>(views.Reverse());
         this.Initialize(returnMessage, customKeyActions);
     }
 
-    private void Initialize(string? returnMessage, Dictionary<ConsoleKey, Action?>? customKeyActions) {
+    private void Initialize(string? returnMessage, Dictionary<ConsoleKey, MenuAction?>? customKeyActions) {
         this._returnMessage = returnMessage;
-        this._keysActions = new Dictionary<ConsoleKey, Action?>(customKeyActions ?? new Dictionary<ConsoleKey, Action?>()) {
+        this._keysActions = new Dictionary<ConsoleKey, MenuAction?>(customKeyActions ?? new Dictionary<ConsoleKey, MenuAction?>()) {
             {
-                ConsoleKey.DownArrow, () => {
+                ConsoleKey.DownArrow, (_) => {
                     if (this._actualIndex < this._actualView?.Options.Count)
                         this._actualIndex++;
                 }
             }, {
-                ConsoleKey.UpArrow, () => {
+                ConsoleKey.UpArrow, (_) => {
                     if (this._actualIndex - 1 >= 0)
                         this._actualIndex--;
                 }
@@ -43,7 +45,7 @@ public class Menu {
             var keyInfo = Console.ReadKey();
 
             if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
-                keyAction?.Invoke();
+                keyAction?.Invoke(this);
 
             // Handle different action for the option
             if (keyInfo.Key != ConsoleKey.Enter) continue;
@@ -70,5 +72,7 @@ public class Menu {
         }
         this._actualView?.Footer.ForEach(Console.WriteLine);
     }
+
+    public void Close() => this._views.Clear();
 
 }

@@ -19,7 +19,7 @@ public class Game {
         }
     }
 
-    public int Time { get; private set; } = 0;
+    public int Time { get; } = 0;
     public List<Team> Teams { get; } = new();
 
     public Game() {
@@ -29,10 +29,11 @@ public class Game {
 
         do {
             foreach (var team in this.Teams.Shuffle()) {
-                new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, Action?>() {
+                new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, MenuAction?>() {
                     {
-                        ConsoleKey.Backspace, () => {
+                        ConsoleKey.Backspace, (menu) => {
                             this._stop = true;
+                            menu.Close();
                         }
                     }
                 });

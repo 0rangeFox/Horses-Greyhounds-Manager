@@ -16,13 +16,21 @@ public class GameView : View {
         };
 
         this.Options = new() {
-            new("End Turn")
+            new("Check my horses", CheckHorses)
         };
 
         this.Footer = new() {
             "",
             $"Click on the backspace to go to the main menu."
         };
+    }
+
+    private void CheckHorses() {
+        foreach (var horse in this._team.Horses) {
+            Console.WriteLine($"Horse: {horse.Name} | Energy: {horse.Energy}");
+        }
+
+        Console.ReadKey();
     }
 
 }
