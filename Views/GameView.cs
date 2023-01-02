@@ -3,16 +3,25 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class GameView : IView {
+public class GameView : View {
 
-    public List<ViewOption> Options { get; }
-
-    private Team _team;
+    private readonly Team _team;
 
     public GameView(Team team) {
         this._team = team;
+
+        this.Header = new() {
+            $"Day: {Game.Instance.Time}",
+            $"Team: {this._team.Name}"
+        };
+
         this.Options = new() {
             new("End Turn")
+        };
+
+        this.Footer = new() {
+            "",
+            $"Click on the backspace to go to the main menu."
         };
     }
 

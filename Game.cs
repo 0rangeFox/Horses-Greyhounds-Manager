@@ -29,7 +29,13 @@ public class Game {
 
         do {
             foreach (var team in this.Teams.Shuffle()) {
-                new Menu(new GameView(team));
+                new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, Action?>() {
+                    {
+                        ConsoleKey.Backspace, () => {
+                            this._stop = true;
+                        }
+                    }
+                });
             }
 
             this.Time++;

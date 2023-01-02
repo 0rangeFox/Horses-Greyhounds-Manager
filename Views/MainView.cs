@@ -2,9 +2,7 @@ using HaGManager.Helpers.Views;
 
 namespace HaGManager.Views; 
 
-public class MainView : IView {
-
-    public List<ViewOption> Options { get; }
+public class MainView : View {
 
     public MainView() {
         this.Options = new() {

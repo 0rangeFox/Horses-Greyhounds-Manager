@@ -2,41 +2,48 @@ namespace HaGManager.Helpers.Views;
 
 public class Menu {
 
-    private readonly Stack<IView> _views;
-    private IView? _actualView;
+    private readonly Stack<View> _views;
+    private View? _actualView;
     private int _actualIndex = 0;
+    private string? _returnMessage;
+    private Dictionary<ConsoleKey, Action?> _keysActions;
 
-    public Stack<IView> Views => this._views;
+    public Stack<View> Views => this._views;
 
-    public Menu(IView view) {
-        this._views = new Stack<IView>(new []{ view });
-        this.Initialize();
+    public Menu(View view, string? returnMessage = null, Dictionary<ConsoleKey, Action?>? customKeyActions = null) {
+        this._views = new Stack<View>(new []{ view });
+        this.Initialize(returnMessage, customKeyActions);
     }
 
-    public Menu(ICollection<IView> views) {
-        this._views = new Stack<IView>(views.Reverse());
-        this.Initialize();
+    public Menu(ICollection<View> views, string? returnMessage = null, Dictionary<ConsoleKey, Action?>? customKeyActions = null) {
+        this._views = new Stack<View>(views.Reverse());
+        this.Initialize(returnMessage, customKeyActions);
     }
 
-    private void Initialize() {
+    private void Initialize(string? returnMessage, Dictionary<ConsoleKey, Action?>? customKeyActions) {
+        this._returnMessage = returnMessage;
+        this._keysActions = new Dictionary<ConsoleKey, Action?>(customKeyActions ?? new Dictionary<ConsoleKey, Action?>()) {
+            {
+                ConsoleKey.DownArrow, () => {
+                    if (this._actualIndex < this._actualView?.Options.Count)
+                        this._actualIndex++;
+                }
+            }, {
+                ConsoleKey.UpArrow, () => {
+                    if (this._actualIndex - 1 >= 0)
+                        this._actualIndex--;
+                }
+            }
+        };
+
         do {
             if (!this._views.TryPeek(out this._actualView)) continue;
 
             this.GenerateViewVisual();
             var keyInfo = Console.ReadKey();
 
-            switch (keyInfo.Key) {
-                case ConsoleKey.DownArrow: {
-                    if (this._actualIndex < this._actualView.Options.Count)
-                        this._actualIndex++;
-                    break;
-                }
-                case ConsoleKey.UpArrow: {
-                    if (this._actualIndex - 1 >= 0)
-                        this._actualIndex--;
-                    break;
-                }
-            }
+            if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
+                keyAction?.Invoke();
 
             // Handle different action for the option
             if (keyInfo.Key != ConsoleKey.Enter) continue;
@@ -51,16 +58,17 @@ public class Menu {
 
     private void GenerateViewVisual() {
         var viewOptions = new List<ViewOption>(this._actualView?.Options ?? new List<ViewOption>()) {
-            new(this._views.Count > 1 ? "Back" : "Exit")
+            new(this._views.Count > 1 ? "Back" : (this._returnMessage ?? "Exit"))
         };
         var actualViewOption = viewOptions[this._actualIndex];
 
         Console.Clear();
-        Console.WriteLine(Game.Instance?.Time ?? 0);
+        this._actualView?.Header.ForEach(Console.WriteLine);
         foreach (var option in viewOptions) {
             Console.Write(option == actualViewOption ? "> " : " ");
             Console.WriteLine(option.Name);
         }
+        this._actualView?.Footer.ForEach(Console.WriteLine);
     }
 
 }
