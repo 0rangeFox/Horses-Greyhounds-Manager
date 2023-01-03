@@ -1,4 +1,5 @@
 using HaGManager.Helpers.Views;
+using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
@@ -13,13 +14,31 @@ public class MainView : View {
     }
 
     private void NewGame() {
-        Console.WriteLine("Starting new game...");
-        new Game();
+        bool stopCreating = false;
+        List<Team> newTeams = new List<Team>();
+
+        do {
+            Console.WriteLine("Name of Team:");
+            var name = $"{Console.ReadLine()}";
+            Console.WriteLine("First Horse name:");
+            var horseName = $"{Console.ReadLine()}";
+            Console.WriteLine("First Greyhound name:");
+            var greyhoundName = $"{Console.ReadLine()}";
+            
+            newTeams.Add(new Team(name, horseName, greyhoundName));
+            
+            Console.WriteLine("Create another team? (Press Y to create or others key to cancel)");
+            if (Console.ReadKey().Key != ConsoleKey.Y)
+                stopCreating = true;
+            Console.Clear();
+        } while (!stopCreating);
+
+        new Game(newTeams);
     }
 
     private void LoadGame() {
         Console.WriteLine("Loading the game...");
-        new Game();
+        new Game(new List<Team>());
     }
 
     private void Credits() {

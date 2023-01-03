@@ -19,14 +19,17 @@ public class Game {
         }
     }
 
-    public int Time { get; } = 0;
+    public int Time { get; private set; } = 0;
     public List<Team> Teams { get; } = new();
 
-    public Game() {
+    public Game(List<Team> teams) {
         Game.Instance = this;
+        this.Teams = teams;
 
-        this.LoadGame();
+        this.Run();
+    }
 
+    private void Run() {
         do {
             foreach (var team in this.Teams.Shuffle()) {
                 new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, MenuAction?>() {
@@ -43,10 +46,6 @@ public class Game {
         } while (!this._stop);
 
         this.SaveGame();
-    }
-
-    private void LoadGame() {
-        Console.WriteLine("Loading the game...");
     }
 
     private void SaveGame() {
