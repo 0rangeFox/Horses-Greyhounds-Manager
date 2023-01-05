@@ -16,7 +16,8 @@ public class GameView : View {
         };
 
         this.Options = new() {
-            new("Check my horses", CheckHorses)
+            new("Check my horses", CheckHorses),
+            new ("Level Up", LevelUp)
         };
 
         this.Footer = new() {
@@ -30,6 +31,16 @@ public class GameView : View {
             Console.WriteLine($"Horse: {horse.Name} | Energy: {horse.Energy}");
         }
 
+        Console.ReadKey();
+    }
+
+    private void LevelUp() {
+        this._team.AddExperience(1000);
+        Console.WriteLine($"Balance: {this._team.Balance}");
+        this._team.AddExperience(2000);
+        Console.WriteLine($"Balance: {this._team.Balance}");
+        this._team.AddExperience(5000);
+        Console.WriteLine($"Balance: {this._team.Balance}");
         Console.ReadKey();
     }
 

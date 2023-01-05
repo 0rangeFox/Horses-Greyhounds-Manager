@@ -5,10 +5,13 @@ public class Team {
 
     public static Dictionary<int, Reward> Rewards = new() {
         [1000] = Reward.HorseSlot,
-        //[2000] = Reward.HorseSlot,
+        //[2000] = ,
         [3000] = Reward.Money500,
         [4000] = Reward.HorseSlot,
-        [5000] = Reward.HorseSlot
+        //[5000] = ,
+        //[6000] = ,
+        [7000] = Reward.Money1000,
+        //[8000] = 
     };
 
     public string Name { get; }
@@ -52,21 +55,14 @@ public class Team {
         return this.Balance += amount;
     }
 
-
-    // TODO Fix this code to not repeat the old rewards.
     public int AddExperience(int amount) {
-        //this.Experience += amount;
+        foreach (var reward in Rewards) {
+            if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience < reward.Key && this.Experience + amount >= reward.Key) {
+                this.Balance += (int) reward.Value;
+            }
+        }
 
-        foreach (var reward in Rewards)
-            // if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience >= reward.Key) {
-            //     this.Balance += (int) reward.Value;
-            //     Console.WriteLine($"The team \"{this.Name}\" has leveled up!");
-            // }
-            if (this.Experience < reward.Key)
-                this.Experience += amount; //else if ()
-
-
-        return this.Experience;
+        return this.Experience += amount;
     }
 
 }
