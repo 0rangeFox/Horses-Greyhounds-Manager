@@ -2,6 +2,7 @@ using HaGManager.Extensions;
 
 namespace HaGManager.Models;
 
+[Serializable]
 public class Horse : Animal {
 
     public float Energy { get; }

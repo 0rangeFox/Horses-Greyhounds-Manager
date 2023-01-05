@@ -2,12 +2,14 @@ using HaGManager.Extensions;
 
 namespace HaGManager.Models;
 
+[Serializable]
 public enum Disease {
 
     BoneBroken
 
 }
 
+[Serializable]
 public abstract class Animal {
 
     public string Name { get; }

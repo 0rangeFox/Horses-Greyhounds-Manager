@@ -1,5 +1,6 @@
 namespace HaGManager.Models;
 
+[Serializable]
 public class Team {
 
     public static Dictionary<int, Reward> Rewards = new() {

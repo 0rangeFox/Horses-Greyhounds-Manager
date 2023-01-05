@@ -1,5 +1,6 @@
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
+using File = HaGManager.Helpers.File;
 
 namespace HaGManager.Views; 
 
@@ -33,12 +34,11 @@ public class MainView : View {
             Console.Clear();
         } while (!stopCreating);
 
-        new Game(newTeams);
+        new Game(new File.GameFile(null, newTeams, null));
     }
 
     private void LoadGame() {
-        Console.WriteLine("Loading the game...");
-        new Game(new List<Team>());
+        new Game(File.Read());
     }
 
     private void Credits() {
