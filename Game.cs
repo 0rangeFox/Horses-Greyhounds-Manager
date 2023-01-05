@@ -30,14 +30,16 @@ public class Game {
 
         this.Time = gameFile.Time;
         this.Teams = gameFile.Teams;
-        this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam;
+        this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
 
         this.Run();
     }
 
+    private Queue<Team> GetShuffledTeams() => new(this.Teams.Shuffle());
+
     private void Run() {
         do {
-            while (!this._stop && (this._shuffledTeamOrderPlay = (this._shuffledTeamOrderPlay.Count > 0 ? this._shuffledTeamOrderPlay : new Queue<Team>(this.Teams.Shuffle()))).Count > 0) {
+            while (!this._stop && this._shuffledTeamOrderPlay.Count > 0) {
                 var team = this._shuffledTeamOrderPlay.Peek();
 
                 new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, MenuAction?>() {
@@ -53,8 +55,10 @@ public class Game {
                     this._shuffledTeamOrderPlay.Dequeue();
             }
 
-            if (!this._stop)
-                this.Time++;
+            if (this._stop) continue;
+
+            this.Time++;
+            this._shuffledTeamOrderPlay = this.GetShuffledTeams();
         } while (!this._stop);
 
         this.SaveGame();
