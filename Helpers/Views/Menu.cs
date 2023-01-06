@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace HaGManager.Helpers.Views;
 
 public delegate void MenuAction(Menu menu);
@@ -7,23 +9,23 @@ public class Menu {
     private readonly Stack<View> _views;
     private View? _actualView;
     private int _actualIndex = 0;
-    private string? _returnMessage;
     private Dictionary<ConsoleKey, MenuAction?> _keysActions;
 
-    public Stack<View> Views => this._views;
+    public ImmutableStack<View> Views => ImmutableStack.CreateRange<View>(this._views);
 
-    public Menu(View view, string? returnMessage = null, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
+    public Menu(View view, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
+        view.Menu = this;
         this._views = new Stack<View>(new []{ view });
-        this.Initialize(returnMessage, customKeyActions);
+        this.Initialize(customKeyActions);
     }
 
-    public Menu(ICollection<View> views, string? returnMessage = null, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
+    public Menu(ICollection<View> views, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
+        foreach (var view in views) view.Menu = this;
         this._views = new Stack<View>(views.Reverse());
-        this.Initialize(returnMessage, customKeyActions);
+        this.Initialize(customKeyActions);
     }
 
-    private void Initialize(string? returnMessage, Dictionary<ConsoleKey, MenuAction?>? customKeyActions) {
-        this._returnMessage = returnMessage;
+    private void Initialize(Dictionary<ConsoleKey, MenuAction?>? customKeyActions) {
         this._keysActions = new Dictionary<ConsoleKey, MenuAction?>(customKeyActions ?? new Dictionary<ConsoleKey, MenuAction?>()) {
             {
                 ConsoleKey.DownArrow, (_) => {
@@ -50,17 +52,18 @@ public class Menu {
             // Handle different action for the option
             if (keyInfo.Key != ConsoleKey.Enter) continue;
 
-            if (this._actualIndex < this._actualView.Options.Count) {
-                Console.Clear();
+            if (this._actualIndex < this._actualView.Options.Count)
                 this._actualView.Options[this._actualIndex].Selected?.Invoke();
-                this._actualIndex = 0;
-            } else this._views.Pop();
+            else this._views.Pop();
+            this._actualIndex = 0;
         } while (this._views.Count > 0);
     }
 
     private void GenerateViewVisual() {
+        this._actualView?.RefreshView();
+
         var viewOptions = new List<ViewOption>(this._actualView?.Options ?? new List<ViewOption>()) {
-            new(this._views.Count > 1 ? "Back" : (this._returnMessage ?? "Exit"))
+            new(this._actualView?.ReturnMessage ?? (this._views.Count > 1 ? "Back" : "Exit"))
         };
         var actualViewOption = viewOptions[this._actualIndex];
 
@@ -74,5 +77,14 @@ public class Menu {
     }
 
     public void Close() => this._views.Clear();
+
+    public void AddView(View view) {
+        view.Menu = this;
+        this._views.Push(view);
+    }
+
+    public void RemoveRecentView() {
+        this._views.Pop();
+    }
 
 }

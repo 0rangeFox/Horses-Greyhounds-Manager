@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using HaGManager.Extensions;
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
@@ -24,6 +23,9 @@ public class Game {
     public int Time { get; private set; } = 0;
     public List<Team> Teams { get; }
     private Queue<Team> _shuffledTeamOrderPlay;
+    public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
+
+    public List<Match> Matches { get; }
 
     public Game(File.GameFile gameFile) {
         Game.Instance = this;
@@ -31,6 +33,12 @@ public class Game {
         this.Time = gameFile.Time;
         this.Teams = gameFile.Teams;
         this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
+
+        this.Matches = new List<Match>() {
+            new Match(this.Time),
+            new Match(this.Time),
+            new Match(this.Time)
+        };
 
         this.Run();
     }
@@ -40,11 +48,14 @@ public class Game {
     private void Run() {
         do {
             while (!this._stop && this._shuffledTeamOrderPlay.Count > 0) {
-                var team = this._shuffledTeamOrderPlay.Peek();
-
-                new Menu(new GameView(team), "Finish turn", new Dictionary<ConsoleKey, MenuAction?>() {
+                new Menu(new GameView(), new Dictionary<ConsoleKey, MenuAction?>() {
                     {
                         ConsoleKey.Backspace, (menu) => {
+                            if (menu.Views.Count() > 1) {
+                                menu.RemoveRecentView();
+                                return;
+                            }
+
                             this._stop = true;
                             menu.Close();
                         }

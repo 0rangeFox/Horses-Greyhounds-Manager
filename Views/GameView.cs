@@ -5,11 +5,9 @@ namespace HaGManager.Views;
 
 public class GameView : View {
 
-    private readonly Team _team;
+    private readonly Team _team = Game.Instance.ActualTeamPlaying;
 
-    public GameView(Team team) {
-        this._team = team;
-
+    public GameView() {
         this.Header = new() {
             $"Day: {Game.Instance.Time}",
             $"Team: {this._team.Name}"
@@ -17,13 +15,16 @@ public class GameView : View {
 
         this.Options = new() {
             new("Check my horses", CheckHorses),
-            new ("Level Up", LevelUp)
+            new ("Level Up", LevelUp),
+            new ("Matches", () => this.Menu.AddView(new MatchesView()))
         };
 
         this.Footer = new() {
             "",
             $"Click on the backspace to go to the main menu."
         };
+
+        this.ReturnMessage = "Finish turn";
     }
 
     private void CheckHorses() {

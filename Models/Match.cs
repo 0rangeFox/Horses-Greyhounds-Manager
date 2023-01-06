@@ -1,6 +1,13 @@
+using System.Text.RegularExpressions;
+
 namespace HaGManager.Models;
 
 public class Match {
+
+    public Guid ID = Guid.NewGuid();
+
+    // Took the code from https://stackoverflow.com/a/42026123/9379900
+    public string ShortID => Regex.Replace(Convert.ToBase64String(this.ID.ToByteArray()), "[/+=]", "");  
 
     public List<Team> Teams { get; }
     public int Checkpoints { get; } // 1 Checkpoint = 100 Meters
