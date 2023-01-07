@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 
 namespace HaGManager.Helpers.Views;
 
@@ -11,7 +11,7 @@ public class Menu {
     private int _actualIndex = 0;
     private Dictionary<ConsoleKey, MenuAction?> _keysActions;
 
-    public ImmutableStack<View> Views => ImmutableStack.CreateRange<View>(this._views);
+    public ReadOnlyCollection<View> Views => this._views.ToList().AsReadOnly();
 
     public Menu(View view, Dictionary<ConsoleKey, MenuAction?>? customKeyActions = null) {
         view.Menu = this;
@@ -28,20 +28,30 @@ public class Menu {
     private void Initialize(Dictionary<ConsoleKey, MenuAction?>? customKeyActions) {
         this._keysActions = new Dictionary<ConsoleKey, MenuAction?>(customKeyActions ?? new Dictionary<ConsoleKey, MenuAction?>()) {
             {
-                ConsoleKey.DownArrow, (_) => {
-                    if (this._actualIndex < this._actualView?.Options.Count)
-                        this._actualIndex++;
+                ConsoleKey.UpArrow, (_) => {
+                    if (this._actualIndex - 1 < 0) return;
+
+                    this._actualIndex--;
+
+                    if ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex - 1 > 0)
+                        this._actualIndex--;
                 }
             }, {
-                ConsoleKey.UpArrow, (_) => {
-                    if (this._actualIndex - 1 >= 0)
-                        this._actualIndex--;
+                ConsoleKey.DownArrow, (_) => {
+                    if (this._actualIndex >= this._actualView!.Options.Count) return;
+
+                    this._actualIndex++;
+
+                    if ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex + 1 < this._actualView!.Options.Count)
+                        this._actualIndex++;
                 }
             }
         };
 
         do {
             if (!this._views.TryPeek(out this._actualView)) continue;
+
+            this.FixActualIndex();
 
             this.GenerateViewVisual();
             var keyInfo = Console.ReadKey();
@@ -59,21 +69,33 @@ public class Menu {
         } while (this._views.Count > 0);
     }
 
-    private void GenerateViewVisual() {
-        this._actualView?.RefreshView();
+    private void FixActualIndex() {
+        if (this._actualIndex > this._actualView!.Options.Count)
+            this._actualIndex = 0;
 
-        var viewOptions = new List<ViewOption>(this._actualView?.Options ?? new List<ViewOption>()) {
-            new(this._actualView?.ReturnMessage ?? (this._views.Count > 1 ? "Back" : "Exit"))
+        for (; this._actualIndex < this._actualView!.Options.Count; this._actualIndex++) {
+            var actualViewOption = this._actualView!.Options[this._actualIndex];
+
+            if (!actualViewOption.Disabled)
+                break;
+        }
+    }
+
+    private void GenerateViewVisual() {
+        this._actualView!.RefreshView();
+
+        var viewOptions = new List<ViewOption>(this._actualView!.Options) {
+            new(this._actualView!.ReturnMessage ?? (this._views.Count > 1 ? "Back" : "Exit"))
         };
         var actualViewOption = viewOptions[this._actualIndex];
 
         Console.Clear();
-        this._actualView?.Header.ForEach(Console.WriteLine);
+        this._actualView!.Header.ForEach(Console.WriteLine);
         foreach (var option in viewOptions) {
             Console.Write(option == actualViewOption ? "> " : " ");
             Console.WriteLine(option.Name);
         }
-        this._actualView?.Footer.ForEach(Console.WriteLine);
+        this._actualView!.Footer.ForEach(Console.WriteLine);
     }
 
     public void Close() => this._views.Clear();

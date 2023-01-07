@@ -10,6 +10,14 @@ public enum Disease {
 }
 
 [Serializable]
+public enum Status {
+
+    None,
+    Racing
+
+}
+
+[Serializable]
 public abstract class Animal {
 
     public string Name { get; }
@@ -18,6 +26,8 @@ public abstract class Animal {
     public float Weight { get; }
 
     public List<Disease> Diseases { get; }
+
+    public Status Status { get; set; } = Status.None;
 
     protected Animal(string name) {
         var random = new Random();
