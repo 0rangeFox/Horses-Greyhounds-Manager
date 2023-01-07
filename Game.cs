@@ -26,7 +26,7 @@ public class Game {
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
 
-    public List<Match> Matches { get; }
+    public List<IMatch<Animal>> Matches { get; }
 
     public Game(File.GameFile gameFile) {
         Game.Instance = this;
@@ -47,19 +47,19 @@ public class Game {
         return rng1 > rng2;
     }
 
-    private List<Match> GenerateMatches() {
-        var newMatches = new List<Match>();
+    private List<IMatch<Animal>> GenerateMatches() {
+        var newMatches = new List<IMatch<Animal>>();
 
         var horsesAmount = this.Teams.Sum(team => team.Horses.Count);
         var greyhoundAmount = this.Teams.Count;
 
         for (int i = 0; i < horsesAmount; i++)
             if (this.ShouldAddNewMatch(i, horsesAmount))
-                newMatches.Add(new(this.Time));
+                newMatches.Add(new Match<Horse>(this.Time));
 
         for (int i = 0; i < greyhoundAmount; i++)
             if (this.ShouldAddNewMatch(i, greyhoundAmount))
-                newMatches.Add(new(this.Time));
+                newMatches.Add(new Match<Greyhound>(this.Time));
 
         return newMatches;
     }

@@ -15,13 +15,13 @@ public static class File {
         public int Time { get; }
         public ReadOnlyCollection<Team> Teams { get; }
         public Queue<Team> ShuffledPlayTeam { get; }
-        public List<Match> Matches { get; }
+        public List<IMatch<Animal>> Matches { get; }
 
-        public GameFile(int? time, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<Match>? matches = null) {
+        public GameFile(int? time, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<IMatch<Animal>>? matches = null) {
             this.Time = time ?? 0;
             this.Teams = teams;
             this.ShuffledPlayTeam = shuffledPlayTeam ?? new Queue<Team>();
-            this.Matches = matches ?? new List<Match>();
+            this.Matches = matches ?? new List<IMatch<Animal>>();
         }
 
     }

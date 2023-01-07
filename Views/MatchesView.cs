@@ -20,9 +20,15 @@ public class MatchesView : View {
 
     public override void RefreshView() {
         this.Options.Clear();
-        for (int i = 0; i < Game.Instance.Matches.Count; i++) {
-            var match = Game.Instance.Matches[i];
-            this.Options.Add(new ViewOption($"Match ID: {match.ShortID} | Track range: {match.Checkpoints * 100} meters | Players: {match.Horses.Count}/{match.Capacity}", () => this.Menu.AddView(new MatchView(match))));
+        foreach (var gameMatch in Game.Instance.Matches) {
+            switch (gameMatch) {
+                case Match<Horse> match:
+                    this.Options.Add(new ViewOption($"Match ID: {match.ShortID} | Track range: {match.Checkpoints * 100} meters | Players: {match.Animals.Count}/{match.Capacity} | Type: Horse", () => this.Menu.AddView(new HorseMatchView(match))));
+                    break;
+                case Match<Greyhound> match:
+                    this.Options.Add(new ViewOption($"Match ID: {match.ShortID} | Track range: {match.Checkpoints * 100} meters | Players: {match.Animals.Count}/{match.Capacity} | Type: Greyhound", () => this.Menu.AddView(new GreyhoundMatchView(match))));
+                    break;
+            }
         }
     }
 
