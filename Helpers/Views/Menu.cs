@@ -33,7 +33,7 @@ public class Menu {
 
                     this._actualIndex--;
 
-                    if ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex - 1 > 0)
+                    while ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex - 1 > 0)
                         this._actualIndex--;
                 }
             }, {
@@ -42,7 +42,7 @@ public class Menu {
 
                     this._actualIndex++;
 
-                    if ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex + 1 < this._actualView!.Options.Count)
+                    while ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex + 1 < this._actualView!.Options.Count)
                         this._actualIndex++;
                 }
             }
@@ -50,8 +50,6 @@ public class Menu {
 
         do {
             if (!this._views.TryPeek(out this._actualView)) continue;
-
-            this.FixActualIndex();
 
             this.GenerateViewVisual();
             var keyInfo = Console.ReadKey();
@@ -84,6 +82,8 @@ public class Menu {
     private void GenerateViewVisual() {
         this._actualView!.RefreshView();
 
+        this.FixActualIndex();
+
         var viewOptions = new List<ViewOption>(this._actualView!.Options) {
             new(this._actualView!.ReturnMessage ?? (this._views.Count > 1 ? "Back" : "Exit"))
         };
@@ -107,6 +107,7 @@ public class Menu {
 
     public void RemoveRecentView() {
         this._views.Pop();
+        this._actualIndex = 0;
     }
 
 }
