@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace HaGManager.Models;
 
+[Serializable]
 public class Match {
 
     public Guid ID = Guid.NewGuid();

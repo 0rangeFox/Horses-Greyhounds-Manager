@@ -34,7 +34,7 @@ public class MainView : View {
             Console.Clear();
         } while (!stopCreating);
 
-        new Game(new File.GameFile(null, newTeams, null));
+        new Game(new File.GameFile(null, newTeams.AsReadOnly()));
     }
 
     private void LoadGame() {

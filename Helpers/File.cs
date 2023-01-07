@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization.Formatters.Binary;
 using HaGManager.Models;
 using SysFile = System.IO.File;
@@ -12,20 +13,22 @@ public static class File {
     public class GameFile {
 
         public int Time { get; }
-        public List<Team> Teams { get; }
+        public ReadOnlyCollection<Team> Teams { get; }
         public Queue<Team> ShuffledPlayTeam { get; }
+        public List<Match> Matches { get; }
 
-        public GameFile(int? time, List<Team> teams, Queue<Team>? shuffledPlayTeam) {
+        public GameFile(int? time, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<Match>? matches = null) {
             this.Time = time ?? 0;
             this.Teams = teams;
             this.ShuffledPlayTeam = shuffledPlayTeam ?? new Queue<Team>();
+            this.Matches = matches ?? new List<Match>();
         }
 
     }
 
-    public static void Write(GameFile objectToWrite) {
+    public static void Write(GameFile actualGameState) {
         using Stream stream = SysFile.Open(CurrentDirectory, FileMode.Create);
-        new BinaryFormatter().Serialize(stream, objectToWrite);
+        new BinaryFormatter().Serialize(stream, actualGameState);
     }
 
     public static GameFile Read() {
