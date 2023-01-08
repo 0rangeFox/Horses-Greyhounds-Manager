@@ -23,10 +23,10 @@ public class MatchesView : View {
         foreach (var gameMatch in Game.Instance.Matches) {
             switch (gameMatch) {
                 case Match<Horse> match:
-                    horsesOptions.Add(new ViewOption($"Match ID: {match.ShortID} | Track range: {match.Checkpoints * 100} meters | Players: {match.Animals.Count}/{match.Capacity}", () => this.Menu.AddView(new HorseMatchView(match))));
+                    horsesOptions.Add(new ViewOption(match.ToString(), () => this.Menu.AddView(new HorseMatchView(match))));
                     break;
                 case Match<Greyhound> match:
-                    greyhoundOptions.Add(new ViewOption($"Match ID: {match.ShortID} | Track range: {match.Checkpoints * 100} meters | Players: {match.Animals.Count}/{match.Capacity}", () => this.Menu.AddView(new GreyhoundMatchView(match))));
+                    greyhoundOptions.Add(new ViewOption(match.ToString(), () => this.Menu.AddView(new GreyhoundMatchView(match))));
                     break;
             }
         }

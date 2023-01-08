@@ -47,19 +47,24 @@ public class Game {
         return rng1 > rng2;
     }
 
-    private List<IMatch<Animal>> GenerateMatches() {
-        var newMatches = new List<IMatch<Animal>>();
+    private List<IMatch<Animal>> GenerateMatches(List<IMatch<Animal>>? matches = null) {
+        var newMatches = new List<IMatch<Animal>>(matches ?? new List<IMatch<Animal>>());
+
+        var horsesMatches = newMatches.Count(match => match is Match<Horse>);
+        var greyhoundsMatches = newMatches.Count(match => match is Match<Greyhound>);
 
         var horsesAmount = this.Teams.Sum(team => team.Horses.Count);
         var greyhoundAmount = this.Teams.Count;
 
-        for (int i = 0; i < horsesAmount; i++)
-            if (this.ShouldAddNewMatch(i, horsesAmount))
-                newMatches.Add(new Match<Horse>(this.Time));
+        if (horsesMatches <= horsesAmount)
+            for (int i = 0; i < horsesAmount; i++)
+                if (this.ShouldAddNewMatch(i, horsesAmount))
+                    newMatches.Add(new Match<Horse>());
 
-        for (int i = 0; i < greyhoundAmount; i++)
-            if (this.ShouldAddNewMatch(i, greyhoundAmount))
-                newMatches.Add(new Match<Greyhound>(this.Time));
+        if (greyhoundsMatches <= greyhoundAmount)
+            for (int i = 0; i < greyhoundAmount; i++)
+                if (this.ShouldAddNewMatch(i, greyhoundAmount))
+                    newMatches.Add(new Match<Greyhound>());
 
         return newMatches;
     }
@@ -87,11 +92,19 @@ public class Game {
 
             if (this._stop) continue;
 
-            this.Time++;
-            this._shuffledTeamOrderPlay = this.GetShuffledTeams();
+            this.SkipTime();
         } while (!this._stop);
 
         this.SaveGame();
+    }
+
+    private void SkipTime() {
+        for (int i = this.Matches.Count - 1; i >= 0; i--)
+            this.Matches[i].Start();
+
+        this.Time++;
+        this._shuffledTeamOrderPlay = this.GetShuffledTeams();
+        this.GenerateMatches(this.Matches);
     }
 
     private void SaveGame() {
