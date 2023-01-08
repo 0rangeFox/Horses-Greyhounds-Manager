@@ -9,6 +9,7 @@ public abstract class MatchView<A> : View where A: Animal {
     protected readonly Match<A> Match;
 
     protected A? SelectedAnimal = null;
+    protected virtual A? JoinedAnimal => null;
 
     protected MatchView(Match<A> match) {
         this.Match = match;
@@ -40,8 +41,7 @@ public abstract class MatchView<A> : View where A: Animal {
     }
 
     protected void LeaveMatch() {
-        if (this.SelectedAnimal == null) return;
-        this.Match.RemoveAnimal(this.SelectedAnimal);
+        this.Match.RemoveAnimal(this.JoinedAnimal);
     }
 
 }

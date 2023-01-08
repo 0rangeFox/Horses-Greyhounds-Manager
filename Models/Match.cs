@@ -53,7 +53,7 @@ public class Match<A> : IMatch<A> where A: Animal {
         this._animals.Add(animal);
     }
 
-    public void RemoveAnimal(A animal) {
+    public void RemoveAnimal(A? animal) {
         if (this._animals.Remove(animal))
             animal.Status = Status.None;
     }

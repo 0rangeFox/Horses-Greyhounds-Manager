@@ -57,12 +57,12 @@ public class Game {
         var greyhoundAmount = this.Teams.Count;
 
         if (horsesMatches <= horsesAmount)
-            for (int i = 0; i < horsesAmount; i++)
+            for (int i = 0; i < RandomExtension.Random.Next(3); i++)
                 if (this.ShouldAddNewMatch(i, horsesAmount))
                     newMatches.Add(new Match<Horse>());
 
         if (greyhoundsMatches <= greyhoundAmount)
-            for (int i = 0; i < greyhoundAmount; i++)
+            for (int i = 0; i < RandomExtension.Random.Next(3); i++)
                 if (this.ShouldAddNewMatch(i, greyhoundAmount))
                     newMatches.Add(new Match<Greyhound>());
 
