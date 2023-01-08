@@ -67,8 +67,8 @@ public class Match<A> : IMatch<A> where A: Animal {
     }
 
     public void End() {
-        foreach (var animal in this._animals)
-            this.RemoveAnimal(animal);
+        for (int i = this._animals.Count - 1; i >= 0; i--)
+            this.RemoveAnimal(this._animals[i]);
 
         Game.Instance.Matches.Remove(this);
     }
