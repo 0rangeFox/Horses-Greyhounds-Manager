@@ -20,7 +20,7 @@ public abstract class MatchView<A> : View where A: Animal {
 
     public override void RefreshView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Time}",
+            $"Day: {Game.Instance.Day}",
             $"Team: {this.Team.Name}",
             "",
             $"Match ID: {this.Match.ID} ({this.Match.ShortID})",

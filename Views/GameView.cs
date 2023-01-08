@@ -9,7 +9,7 @@ public class GameView : View {
 
     public GameView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Time}",
+            $"Day: {Game.Instance.Day}",
             $"Team: {this._team.Name}"
         };
 

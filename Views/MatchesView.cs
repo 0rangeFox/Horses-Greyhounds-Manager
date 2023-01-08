@@ -9,7 +9,7 @@ public class MatchesView : View {
 
     public MatchesView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Time}",
+            $"Day: {Game.Instance.Day}",
             $"Team: {this._team.Name}",
             $"Total Matches: {Game.Instance.Matches.Count}",
             ""

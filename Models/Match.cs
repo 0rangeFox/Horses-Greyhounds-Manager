@@ -38,13 +38,13 @@ public class Match<A> : IMatch<A> where A: Animal {
     public int Checkpoints { get; }
     public int CreatedDate { get; }
     public int Duration { get; }
-    public int RemainingDays => (this.CreatedDate + this.Duration) - Game.Instance.Time;
+    public int RemainingDays => (this.CreatedDate + this.Duration) - Game.Instance.Day;
 
     public Match() {
         var random = new Random();
         this._animals = new List<A>(random.Next(_minPlayers, _maxPlayers));
         this.Checkpoints = random.Next(_minCheckpoints, _maxCheckpoints);
-        this.CreatedDate = Game.Instance.Time;
+        this.CreatedDate = Game.Instance.Day;
         this.Duration = random.Next(1, _maxDuration);
     }
 

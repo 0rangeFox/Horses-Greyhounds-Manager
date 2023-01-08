@@ -21,7 +21,7 @@ public class Game {
         }
     }
 
-    public int Time { get; private set; } = 0;
+    public int Day { get; private set; } = 0;
     public ReadOnlyCollection<Team> Teams { get; }
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
@@ -31,7 +31,7 @@ public class Game {
     public Game(File.GameFile gameFile) {
         Game.Instance = this;
 
-        this.Time = gameFile.Time;
+        this.Day = gameFile.Day;
         this.Teams = gameFile.Teams;
         this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
         this.Matches = gameFile.Matches.Count > 0 ? gameFile.Matches : this.GenerateMatches();
@@ -42,8 +42,8 @@ public class Game {
     private Queue<Team> GetShuffledTeams() => new(this.Teams.Shuffle());
 
     private bool ShouldAddNewMatch(int index, int maxAmount) {
-        var rng1 = RandomExtension.Random.Next(0, maxAmount + this.Time);
-        var rng2 = (index * rng1) * this.Time;
+        var rng1 = RandomExtension.Random.Next(0, maxAmount + this.Day);
+        var rng2 = (index * rng1) * this.Day;
         return rng1 > rng2;
     }
 
@@ -92,24 +92,24 @@ public class Game {
 
             if (this._stop) continue;
 
-            this.SkipTime();
+            this.SkipDay();
         } while (!this._stop);
 
         this.SaveGame();
     }
 
-    private void SkipTime() {
+    private void SkipDay() {
         for (int i = this.Matches.Count - 1; i >= 0; i--)
             this.Matches[i].Start();
 
-        this.Time++;
+        this.Day++;
         this._shuffledTeamOrderPlay = this.GetShuffledTeams();
         this.GenerateMatches(this.Matches);
     }
 
     private void SaveGame() {
         Console.WriteLine("Saving the game...");
-        File.Write(new File.GameFile(this.Time, this.Teams, this._shuffledTeamOrderPlay, this.Matches));
+        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Matches));
     }
 
 }

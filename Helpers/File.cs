@@ -12,13 +12,13 @@ public static class File {
     [Serializable]
     public class GameFile {
 
-        public int Time { get; }
+        public int Day { get; }
         public ReadOnlyCollection<Team> Teams { get; }
         public Queue<Team> ShuffledPlayTeam { get; }
         public List<IMatch<Animal>> Matches { get; }
 
-        public GameFile(int? time, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<IMatch<Animal>>? matches = null) {
-            this.Time = time ?? 0;
+        public GameFile(int? day, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<IMatch<Animal>>? matches = null) {
+            this.Day = day ?? 0;
             this.Teams = teams;
             this.ShuffledPlayTeam = shuffledPlayTeam ?? new Queue<Team>();
             this.Matches = matches ?? new List<IMatch<Animal>>();
