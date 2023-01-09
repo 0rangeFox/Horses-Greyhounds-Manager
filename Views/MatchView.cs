@@ -31,6 +31,11 @@ public abstract class MatchView<A> : View where A: Animal {
             ""
         };
 
+        this.Header.Add("Rewards:");
+        for (int i = 0; i < this.Match.Capacity; i++)
+            this.Header.Add($"#{i + 1} | Money: {this.Match.MoneyRewards[i]} | Experience: {this.Match.ExperienceRewards[i]}");
+        this.Header.Add("");
+
         this.RefreshMatchView();
     }
 

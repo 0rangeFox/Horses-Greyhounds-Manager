@@ -17,12 +17,13 @@ public interface IMatch<out A> where A : Animal {
     public int RemainingDays { get; }
 
     public void Start();
-    public void End();
 
 }
 
 [Serializable]
 public class Match<A> : IMatch<A> where A: Animal {
+
+    private static Comparison<int> _sortDescending = new((a, b) => b.CompareTo(a));
 
     private static int _minPlayers = 2;
     private static int _maxPlayers = 6;
@@ -30,6 +31,11 @@ public class Match<A> : IMatch<A> where A: Animal {
     private static int _maxCheckpoints = 9;
     private static int _maxDuration = 14; // Days
     private static int _perTrackCheckpointDistance = 6;
+
+    private static int _minMoneyAmount = 100;
+    private static int _maxMoneyAmount = 2500;
+    private static int _minExperienceAmount = 25;
+    private static int _maxExperienceAmount = 150;
 
     public Guid ID { get; } = Guid.NewGuid();
     // Took the code from https://stackoverflow.com/a/42026123/9379900
@@ -44,11 +50,26 @@ public class Match<A> : IMatch<A> where A: Animal {
     public int Duration { get; }
     public int RemainingDays => (this.CreatedDate + this.Duration) - Game.Instance.Day;
 
+    public ReadOnlyCollection<int> MoneyRewards;
+    public ReadOnlyCollection<int> ExperienceRewards;
+
     public Match() {
         this._animals = new List<A>(RandomExtension.Random.Next(_minPlayers, _maxPlayers));
         this.Checkpoints = RandomExtension.Random.Next(_minCheckpoints, _maxCheckpoints);
         this.CreatedDate = Game.Instance.Day;
         this.Duration = RandomExtension.Random.Next(1, _maxDuration);
+
+        var moneyRewards = new List<int>();
+        var experienceRewards = new List<int>();
+        for (int i = 0; i < this._animals.Capacity; i++) {
+            moneyRewards.Add(RandomExtension.Random.Next(_minMoneyAmount, _maxMoneyAmount));
+            experienceRewards.Add(RandomExtension.Random.Next(_minExperienceAmount, _maxExperienceAmount));
+        }
+        moneyRewards.Sort(_sortDescending);
+        experienceRewards.Sort(_sortDescending);
+
+        this.MoneyRewards = moneyRewards.AsReadOnly();
+        this.ExperienceRewards = experienceRewards.AsReadOnly();
     }
 
     public bool AddAnimal(A animal) {
@@ -127,18 +148,24 @@ public class Match<A> : IMatch<A> where A: Animal {
             racers.OrderByDescending(racer => racer.Distance).ThenBy(racer => racer.FinishTime).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
 
             this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
-            Thread.Sleep(250);
+            Thread.Sleep(0);
         } while (racers.Sum(racer => racer.FinishTime == null ? racer.Distance : gameTrackDistance) != racers.Count * gameTrackDistance);
         gameTime.Stop();
 
         Console.ReadKey();
 
-        this.End();
+        this.End(racers);
     }
 
-    public void End() {
-        for (int i = this._animals.Count - 1; i >= 0; i--)
-            this.RemoveAnimal(this._animals[i]);
+    private void End(List<Racer> racers) {
+        for (int i = 0; i < racers.Count; i++) {
+            var racer = racers[i];
+
+            this.RemoveAnimal(racer.Animal);
+
+            racer.Team.AddMoney(this.MoneyRewards[i]);
+            racer.Team.AddExperience(this.ExperienceRewards[i]);
+        }
 
         Game.Instance.Matches.Remove(this);
     }
@@ -154,7 +181,8 @@ public class Match<A> : IMatch<A> where A: Animal {
         public int Distance { get; set; } = 0;
         public TimeSpan? FinishTime { get; set; } = null;
 
-        public string Name => this.Animal.Team.Name;
+        public Team Team => this.Animal.Team;
+        public string Name => this.Team.Name;
         public double Speed => this.Animal.Speed * (this.Animal.Resistance / (this.Distance * .1)) / this.Animal.Weight;
 
         public Racer(A animal, int position) {
