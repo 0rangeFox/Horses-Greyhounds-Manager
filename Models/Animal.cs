@@ -5,7 +5,7 @@ namespace HaGManager.Models;
 [Serializable]
 public enum Disease {
 
-    BoneBroken
+    BrokenBone
 
 }
 
@@ -42,17 +42,14 @@ public abstract class Animal {
     }
 
     protected Animal(string name) {
-        var random = new Random();
-
         this.Name = name;
-        this.Speed = RandomExtension.NextSingle(0, 100, random);
-        this.Resistance = RandomExtension.NextSingle(0, 100, random);
-        this.Weight = RandomExtension.NextSingle(0, 100, random);
-
+        this.Speed = RandomExtension.NextSingle(5, 30);
+        this.Resistance = RandomExtension.NextSingle(5, 30);
+        this.Weight = RandomExtension.NextSingle(10, 30);
         this.Diseases = new List<Disease>();
     }
 
     public override int GetHashCode() => this.ID.GetHashCode();
-    public override bool Equals(object? obj) => obj is not Animal animal || this.ID.Equals(animal.ID);
+    public override bool Equals(object? obj) => obj is Animal animal && this.ID.Equals(animal.ID);
 
 }

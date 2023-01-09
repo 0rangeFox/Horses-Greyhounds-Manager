@@ -26,7 +26,7 @@ public class Game {
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
 
-    public List<IMatch<Animal>> Matches { get; }
+    public List<IMatch<Animal>> Matches { get; private set; }
 
     public Game(File.GameFile gameFile) {
         Game.Instance = this;
@@ -104,7 +104,7 @@ public class Game {
 
         this.Day++;
         this._shuffledTeamOrderPlay = this.GetShuffledTeams();
-        this.GenerateMatches(this.Matches);
+        this.Matches = this.GenerateMatches(this.Matches);
     }
 
     private void SaveGame() {

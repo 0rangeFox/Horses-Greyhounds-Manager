@@ -13,7 +13,7 @@ public class HorseMatchView : MatchView<Horse> {
         if (this.JoinedAnimal == null) {
             this.Options.Add(new (this.SelectedAnimal != null ? $"Selected horse: {this.SelectedAnimal.Name} - Change horse" : "Choose horse", () => this.Menu.AddView(new TeamHorsesView(UpdateHorse, true))));
             if (this.SelectedAnimal != null)
-                this.Options.Add(new ("Join on this match", this.JoinMatch));
+                this.Options.Add(new ("Join on this match", this.JoinMatch, this.Match.IsFull));
         } else this.Options.Add(new ("Leave this match", this.LeaveMatch));
     }
 

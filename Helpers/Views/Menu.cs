@@ -33,7 +33,7 @@ public class Menu {
 
                     this._actualIndex--;
 
-                    while ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex - 1 > 0)
+                    while ((this._actualView!.Options.ElementAtOrDefault(this._actualIndex)?.Disabled ?? false) && this._actualIndex - 1 >= 0)
                         this._actualIndex--;
                 }
             }, {

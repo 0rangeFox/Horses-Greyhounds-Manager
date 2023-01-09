@@ -13,7 +13,7 @@ public class GreyhoundMatchView : MatchView<Greyhound> {
         if (this.JoinedAnimal == null) {
             this.Options.Add(new (this.SelectedAnimal != null ? $"Selected greyhound: {this.SelectedAnimal.Name} - Change greyhound" : "Choose greyhound", () => this.Menu.AddView(new TeamGreyhoundsView(UpdateGreyhound, true))));
             if (this.SelectedAnimal != null)
-                this.Options.Add(new ("Join on this match", this.JoinMatch));
+                this.Options.Add(new ("Join on this match", this.JoinMatch, this.Match.IsFull));
         } else this.Options.Add(new ("Leave this match", this.LeaveMatch));
     }
 
