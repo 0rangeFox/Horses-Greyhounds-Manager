@@ -5,7 +5,9 @@ namespace HaGManager.Models;
 [Serializable]
 public enum Disease {
 
-    BrokenBone
+    BrokenBone,
+    Sick,
+    Fatigue
 
 }
 

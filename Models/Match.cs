@@ -83,7 +83,7 @@ public class Match<A> : IMatch<A> where A: Animal {
         foreach (var racer in racers) {
             for (int i = 0; i <= trackDistance; i++)
                 Console.Write(racer.Distance == i ? '#' : '.');
-            Console.WriteLine($" | {racer.Position} | {racer.Name} {(racer.FinishTime != null ? $"| Finished in {racer.FinishTime}" : $"| Speed: {racer.Speed}")}");
+            Console.WriteLine($" | {racer.Position} | {racer.Name} {(racer.FinishTime != null ? (racer.Animal.Diseases.Contains(Disease.BrokenBone) ? "| DNF" : $"| Finished in {racer.FinishTime}") : $"| Speed: {racer.Speed}")}");
         }
         Console.WriteLine(track);
     }
@@ -104,7 +104,7 @@ public class Match<A> : IMatch<A> where A: Animal {
         }
         do {
             foreach (var racer in racers) {
-                if (racer.Distance >= gameTrackDistance) continue;
+                if (racer.FinishTime != null || racer.Distance >= gameTrackDistance) continue;
 
                 if (racer.Speed < RandomExtension.NextDouble(0, 50)) continue;
 
@@ -113,16 +113,22 @@ public class Match<A> : IMatch<A> where A: Animal {
                 if (racer.Distance == gameTrackDistance)
                     racer.FinishTime = gameTime.Elapsed;
                 else if (racer.Distance > _perTrackCheckpointDistance && (racer.Distance % _perTrackCheckpointDistance) - 1 == 0) {
-                    Console.WriteLine($"Team {racer.Name} passed the checkpoint!");
-                    Console.ReadKey();
+                    if (RandomExtension.Random.Next(100) > 90) {
+                        var diseases = Enum.GetValues<Disease>();
+                        var disease = diseases[RandomExtension.Random.Next(diseases.Length)];
+
+                        if (disease == Disease.BrokenBone)
+                            racer.FinishTime = gameTime.Elapsed;
+                        racer.Animal.Diseases.Add(disease);
+                    }
                 }
             }
 
-            racers.OrderByDescending(racer => racer.Distance).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
+            racers.OrderByDescending(racer => racer.Distance).ThenBy(racer => racer.FinishTime).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
 
             this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
             Thread.Sleep(250);
-        } while (racers.Sum(racer => racer.Distance) != racers.Count * gameTrackDistance);
+        } while (racers.Sum(racer => racer.FinishTime == null ? racer.Distance : gameTrackDistance) != racers.Count * gameTrackDistance);
         gameTime.Stop();
 
         Console.ReadKey();
