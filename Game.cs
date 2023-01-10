@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using HaGManager.Extensions;
+using HaGManager.Helpers;
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
 using HaGManager.Views;
@@ -8,6 +9,8 @@ using File = HaGManager.Helpers.File;
 namespace HaGManager; 
 
 public class Game {
+
+    private static int _maxTriesToGenerateAnimalsInMarket = 3;
 
     public static Game Instance = null!;
 
@@ -26,6 +29,7 @@ public class Game {
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
 
+    public List<ISeller<Animal>> Market;
     public List<IMatch<Animal>> Matches { get; private set; }
 
     public Game(File.GameFile gameFile) {
@@ -34,6 +38,7 @@ public class Game {
         this.Day = gameFile.Day;
         this.Teams = gameFile.Teams;
         this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
+        this.Market = gameFile.Market.Count > 0 ? gameFile.Market : this.GenerateHorsesToMarket();
         this.Matches = gameFile.Matches.Count > 0 ? gameFile.Matches : this.GenerateMatches();
 
         this.Run();
@@ -45,6 +50,16 @@ public class Game {
         var rng1 = RandomExtension.Random.Next(0, maxAmount + this.Day);
         var rng2 = (index * rng1) * this.Day;
         return rng1 > rng2;
+    }
+
+    private List<ISeller<Animal>> GenerateHorsesToMarket(List<ISeller<Animal>>? market = null) {
+        var newMarket = new List<ISeller<Animal>>(market ?? new List<ISeller<Animal>>());
+
+        for (int i = 0; i < _maxTriesToGenerateAnimalsInMarket; i++)
+            if (RandomExtension.Random.Next(100) > 75)
+                newMarket.Add(new Seller<Horse>(new Horse(Generators.GenerateName(RandomExtension.Random.Next(16)))));
+
+        return newMarket;
     }
 
     private List<IMatch<Animal>> GenerateMatches(List<IMatch<Animal>>? matches = null) {
@@ -104,12 +119,13 @@ public class Game {
 
         this.Day++;
         this._shuffledTeamOrderPlay = this.GetShuffledTeams();
+        this.Market = this.GenerateHorsesToMarket(this.Market);
         this.Matches = this.GenerateMatches(this.Matches);
     }
 
     private void SaveGame() {
         Console.WriteLine("Saving the game...");
-        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Matches));
+        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Market, this.Matches));
     }
 
 }

@@ -11,7 +11,7 @@ public class HorseMatchView : MatchView<Horse> {
     protected override void RefreshMatchView() {
         this.Options.Clear();
         if (this.JoinedAnimal == null) {
-            this.Options.Add(new (this.SelectedAnimal != null ? $"Selected horse: {this.SelectedAnimal.Name} - Change horse" : "Choose horse", () => this.Menu.AddView(new TeamHorsesView(UpdateHorse, true))));
+            this.Options.Add(new (this.SelectedAnimal != null ? $"Selected horse: {this.SelectedAnimal.Name} - Change horse" : "Choose horse", () => this.Menu.AddView(new TeamHorsesView(UpdateHorse))));
             if (this.SelectedAnimal != null)
                 this.Options.Add(new ("Join on this match", this.JoinMatch, this.Match.IsFull));
         } else this.Options.Add(new ("Leave this match", this.LeaveMatch));

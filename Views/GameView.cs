@@ -14,8 +14,9 @@ public class GameView : View {
         };
 
         this.Options = new() {
-            new("Check my horses", CheckHorses),
+            new("Check my horses", () => this.Menu.AddView(new TeamHorsesView())),
             new ("Level Up", LevelUp),
+            new ("Market", () => this.Menu.AddView(new MarketView())),
             new ("Matches", () => this.Menu.AddView(new MatchesView()))
         };
 
@@ -25,14 +26,6 @@ public class GameView : View {
         };
 
         this.ReturnMessage = "Finish turn";
-    }
-
-    private void CheckHorses() {
-        foreach (var horse in this._team.Horses) {
-            Console.WriteLine($"Horse: {horse.Name} | Energy: {horse.Energy}");
-        }
-
-        Console.ReadKey();
     }
 
     private void LevelUp() {

@@ -55,6 +55,12 @@ public class Team {
         return this.Balance += amount;
     }
 
+    public float RemoveMoney(float amount) {
+        if ((this.Balance -= amount) < 0)
+            this.Balance = 0;
+        return this.Balance;
+    }
+
     public int AddExperience(int amount) {
         foreach (var reward in Rewards) {
             if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience < reward.Key && this.Experience + amount >= reward.Key) {

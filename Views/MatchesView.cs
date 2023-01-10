@@ -18,7 +18,7 @@ public class MatchesView : View {
         this.ReturnMessage = "Return to menu";
     }
 
-    public override void RefreshView() {
+    public override bool RefreshView() {
         List<ViewOption> horsesOptions = new(), greyhoundOptions = new();
         foreach (var gameMatch in Game.Instance.Matches) {
             switch (gameMatch) {
@@ -38,6 +38,8 @@ public class MatchesView : View {
         this.Options.Add(new ViewOption($"- Greyhounds ({greyhoundOptions.Count}x matches)", null, true));
         this.Options.AddRange(greyhoundOptions);
         this.Options.Add(new ViewOption("", null, true));
+
+        return true;
     }
 
 }

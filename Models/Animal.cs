@@ -22,6 +22,8 @@ public enum Status {
 [Serializable]
 public abstract class Animal {
 
+    private static float _quickSellFee = .25f; // In Percentage
+
     public Guid ID { get; } = Guid.NewGuid();
 
     public string Name { get; }
@@ -34,6 +36,9 @@ public abstract class Animal {
     public Status Status { get; set; } = Status.None;
 
     public Team Team => Game.Instance.Teams.First(team => this is Horse && team.Horses.Contains(this) || this is Greyhound && team.Greyhound.Equals(this));
+    public bool IsInMarket => Game.Instance.Market.Exists(seller => seller.Animal.Equals(this));
+    public float Price => ((this.Speed * this.Resistance) / this.Weight) * 100;
+    public float QuickSellPrice => this.Price * (1f - _quickSellFee);
 
     public Match<A>? GetMatch<A>() where A: Animal {
         if (this.Status == Status.Racing)
@@ -50,6 +55,9 @@ public abstract class Animal {
         this.Weight = RandomExtension.NextSingle(10, 30);
         this.Diseases = new List<Disease>();
     }
+
+    public abstract void BuyAnimal(Team buyer);
+    public abstract void SellAnimal(float price, bool quickSell = false);
 
     public override int GetHashCode() => this.ID.GetHashCode();
     public override bool Equals(object? obj) => obj is Animal animal && this.ID.Equals(animal.ID);

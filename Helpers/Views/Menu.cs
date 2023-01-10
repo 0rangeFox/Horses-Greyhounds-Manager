@@ -51,18 +51,20 @@ public class Menu {
         do {
             if (!this._views.TryPeek(out this._actualView)) continue;
 
-            this.GenerateViewVisual();
-            var keyInfo = Console.ReadKey();
+            if (this.GenerateViewVisual()) {
+                var keyInfo = Console.ReadKey();
 
-            if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
-                keyAction?.Invoke(this);
+                if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
+                    keyAction?.Invoke(this);
 
-            // Handle different action for the option
-            if (keyInfo.Key != ConsoleKey.Enter) continue;
+                // Handle different action for the option
+                if (keyInfo.Key != ConsoleKey.Enter) continue;
 
-            if (this._actualIndex < this._actualView.Options.Count)
-                this._actualView.Options[this._actualIndex].Selected?.Invoke();
-            else this._views.Pop();
+                if (this._actualIndex < this._actualView.Options.Count)
+                    this._actualView.Options[this._actualIndex].Selected?.Invoke();
+                else this._views.Pop();
+            }
+
             this._actualIndex = 0;
         } while (this._views.Count > 0);
     }
@@ -79,8 +81,9 @@ public class Menu {
         }
     }
 
-    private void GenerateViewVisual() {
-        this._actualView!.RefreshView();
+    private bool GenerateViewVisual() {
+        if (!this._actualView!.RefreshView())
+            return false;
 
         this.FixActualIndex();
 
@@ -96,6 +99,8 @@ public class Menu {
             Console.WriteLine(option.Name);
         }
         this._actualView!.Footer.ForEach(Console.WriteLine);
+
+        return true;
     }
 
     public void Close() => this._views.Clear();
@@ -105,9 +110,6 @@ public class Menu {
         this._views.Push(view);
     }
 
-    public void RemoveRecentView() {
-        this._views.Pop();
-        this._actualIndex = 0;
-    }
+    public void RemoveRecentView() => this._views.Pop();
 
 }

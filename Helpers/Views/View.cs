@@ -10,6 +10,6 @@ public abstract class View {
 
     public string? ReturnMessage { get; set; } = null;
 
-    public virtual void RefreshView() {}
+    public virtual bool RefreshView() => true;
 
 }

@@ -19,7 +19,7 @@ public abstract class MatchView<A> : View where A: Animal {
 
     protected virtual void RefreshMatchView() {}
 
-    public override void RefreshView() {
+    public override bool RefreshView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
             $"Team: {this.Team.Name}",
@@ -37,6 +37,8 @@ public abstract class MatchView<A> : View where A: Animal {
         this.Header.Add("");
 
         this.RefreshMatchView();
+
+        return true;
     }
 
     protected void JoinMatch() {

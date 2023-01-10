@@ -134,7 +134,7 @@ public class Match<A> : IMatch<A> where A: Animal {
                 if (racer.Distance == gameTrackDistance)
                     racer.FinishTime = gameTime.Elapsed;
                 else if (racer.Distance > _perTrackCheckpointDistance && (racer.Distance % _perTrackCheckpointDistance) - 1 == 0) {
-                    if (RandomExtension.Random.Next(100) > 90) {
+                    if (RandomExtension.Random.Next(100) > 30) {
                         var diseases = Enum.GetValues<Disease>();
                         var disease = diseases[RandomExtension.Random.Next(diseases.Length)];
 
@@ -148,7 +148,7 @@ public class Match<A> : IMatch<A> where A: Animal {
             racers.OrderByDescending(racer => racer.Distance).ThenBy(racer => racer.FinishTime).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
 
             this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
-            Thread.Sleep(0);
+            Thread.Sleep(250);
         } while (racers.Sum(racer => racer.FinishTime == null ? racer.Distance : gameTrackDistance) != racers.Count * gameTrackDistance);
         gameTime.Stop();
 
