@@ -110,6 +110,10 @@ public class Menu {
         this._views.Push(view);
     }
 
-    public void RemoveRecentView() => this._views.Pop();
+    public void RemoveRecentView(uint amount = 1) {
+        for (int i = 0; i < amount; i++)
+            this._views.Pop();
+        this._actualIndex = 0;
+    }
 
 }

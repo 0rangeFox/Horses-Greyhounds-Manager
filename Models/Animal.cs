@@ -76,7 +76,7 @@ public abstract class Animal {
 
     public abstract bool BuyAnimal(Team buyer);
     public abstract bool SellAnimal(float price, bool quickSell = false);
-    public abstract bool Trade<A>(A? animalToTrade = null, float amount = 0f) where A: Animal;
+    public abstract bool Trade(Animal? animalToTrade = null, float amount = 0f);
     public abstract bool RemoveTrade();
     public abstract bool AcceptTrade(Team team, float amount = 0f);
 

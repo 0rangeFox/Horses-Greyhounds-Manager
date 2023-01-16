@@ -23,19 +23,19 @@ public interface IMatch<out A> where A : Animal {
 [Serializable]
 public class Match<A> : IMatch<A> where A: Animal {
 
-    private static Comparison<int> _sortDescending = new((a, b) => b.CompareTo(a));
+    private static Comparison<int> _sortDescending = (a, b) => b.CompareTo(a);
 
-    private static int _minPlayers = 2;
-    private static int _maxPlayers = 6;
-    private static int _minCheckpoints = 1;
-    private static int _maxCheckpoints = 9;
-    private static int _maxDuration = 14; // Days
-    private static int _perTrackCheckpointDistance = 6;
+    private const int MinPlayers = 2;
+    private const int MaxPlayers = 6;
+    private const int MinCheckpoints = 1;
+    private const int MaxCheckpoints = 9;
+    private const int MaxDuration = 14; // Days
+    private const int PerTrackCheckpointDistance = 6;
 
-    private static int _minMoneyAmount = 100;
-    private static int _maxMoneyAmount = 2500;
-    private static int _minExperienceAmount = 25;
-    private static int _maxExperienceAmount = 150;
+    private const int MinMoneyAmount = 100;
+    private const int MaxMoneyAmount = 2500;
+    private const int MinExperienceAmount = 25;
+    private const int MaxExperienceAmount = 150;
 
     public Guid ID { get; } = Guid.NewGuid();
     // Took the code from https://stackoverflow.com/a/42026123/9379900
@@ -54,16 +54,16 @@ public class Match<A> : IMatch<A> where A: Animal {
     public ReadOnlyCollection<int> ExperienceRewards;
 
     public Match() {
-        this._animals = new List<A>(RandomExtension.Random.Next(_minPlayers, _maxPlayers));
-        this.Checkpoints = RandomExtension.Random.Next(_minCheckpoints, _maxCheckpoints);
+        this._animals = new List<A>(RandomExtension.Random.Next(MinPlayers, MaxPlayers));
+        this.Checkpoints = RandomExtension.Random.Next(MinCheckpoints, MaxCheckpoints);
         this.CreatedDate = Game.Instance.Day;
-        this.Duration = RandomExtension.Random.Next(1, _maxDuration);
+        this.Duration = RandomExtension.Random.Next(1, MaxDuration);
 
         var moneyRewards = new List<int>();
         var experienceRewards = new List<int>();
         for (int i = 0; i < this._animals.Capacity; i++) {
-            moneyRewards.Add(RandomExtension.Random.Next(_minMoneyAmount, _maxMoneyAmount));
-            experienceRewards.Add(RandomExtension.Random.Next(_minExperienceAmount, _maxExperienceAmount));
+            moneyRewards.Add(RandomExtension.Random.Next(MinMoneyAmount, MaxMoneyAmount));
+            experienceRewards.Add(RandomExtension.Random.Next(MinExperienceAmount, MaxExperienceAmount));
         }
         moneyRewards.Sort(_sortDescending);
         experienceRewards.Sort(_sortDescending);
@@ -92,7 +92,7 @@ public class Match<A> : IMatch<A> where A: Animal {
     }
 
     private string GenerateTrack() {
-        var trackRoad = new string('.', _perTrackCheckpointDistance - 1);
+        var trackRoad = new string('.', PerTrackCheckpointDistance - 1);
         var track = "S";
         for (int i = 1; i <= this.Checkpoints; i++)
             track += $"{trackRoad}{i}";
@@ -112,52 +112,55 @@ public class Match<A> : IMatch<A> where A: Animal {
     public void Start() {
         if (this.RemainingDays - 1 >= 1 && !this.IsFull) return;
 
-        var gameTime = new Stopwatch();
-        var gameTrack = this.GenerateTrack();
-        var gameTrackDistance = gameTrack.Length - 1;
-        var racers = this._animals.Select((animal, i) => new Racer(animal, i + 1)).ToList();
+        var racers = new List<Racer>();
 
-        gameTime.Start();
-        for (int i = 3 - 1; i > 0; i--) {
-            this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
-            Console.WriteLine($"\nRace will start in {i}");
-            Thread.Sleep(1000);
-        }
-        do {
-            foreach (var racer in racers) {
-                if (racer.FinishTime != null || racer.Distance >= gameTrackDistance) continue;
+        if (this.Animals.Count > 1) {
+            var gameTime = new Stopwatch();
+            var gameTrack = this.GenerateTrack();
+            var gameTrackDistance = gameTrack.Length - 1;
+            racers.AddRange(this._animals.Select((animal, i) => new Racer(animal, i + 1)));
 
-                if (racer.Speed < RandomExtension.NextDouble(0, 50)) continue;
+            gameTime.Start();
+            for (int i = 3 - 1; i > 0; i--) {
+                this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
+                Console.WriteLine($"\nRace will start in {i}");
+                Thread.Sleep(1000);
+            }
+            do {
+                foreach (var racer in racers) {
+                    if (racer.FinishTime != null || racer.Distance >= gameTrackDistance) continue;
+                    if (racer.Speed < RandomExtension.NextDouble(0, 50)) continue;
 
-                racer.Distance++;
+                    racer.Distance++;
 
-                if (racer.Distance == gameTrackDistance)
-                    racer.FinishTime = gameTime.Elapsed;
-                else if (racer.Distance > _perTrackCheckpointDistance && (racer.Distance % _perTrackCheckpointDistance) - 1 == 0) {
-                    if (RandomExtension.Random.Next(100) > 30) {
-                        var diseases = Enum.GetValues<Disease>();
-                        var disease = diseases[RandomExtension.Random.Next(diseases.Length)];
+                    if (racer.Distance == gameTrackDistance)
+                        racer.FinishTime = gameTime.Elapsed;
+                    else if (racer.Distance > PerTrackCheckpointDistance && (racer.Distance % PerTrackCheckpointDistance) - 1 == 0) {
+                        if (RandomExtension.Random.Next(100) > 30) {
+                            var diseases = Enum.GetValues<Disease>();
+                            var disease = diseases[RandomExtension.Random.Next(diseases.Length)];
 
-                        if (disease == Disease.BrokenBone)
-                            racer.FinishTime = gameTime.Elapsed;
-                        racer.Animal.Diseases.Add(disease);
+                            if (disease == Disease.BrokenBone)
+                                racer.FinishTime = gameTime.Elapsed;
+                            racer.Animal.Diseases.Add(disease);
+                        }
                     }
                 }
-            }
 
-            racers.OrderByDescending(racer => racer.Distance).ThenBy(racer => racer.FinishTime).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
+                racers.OrderByDescending(racer => racer.Distance).ThenBy(racer => racer.FinishTime).ToList().ForEach((racer, pos) => racer.Position = pos + 1);
 
-            this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
-            Thread.Sleep(250);
-        } while (racers.Sum(racer => racer.FinishTime == null ? racer.Distance : gameTrackDistance) != racers.Count * gameTrackDistance);
-        gameTime.Stop();
+                this.GenerateRaceView(gameTrack, gameTrackDistance, racers);
+                Thread.Sleep(250);
+            } while (racers.Sum(racer => racer.FinishTime == null ? racer.Distance : gameTrackDistance) != racers.Count * gameTrackDistance);
+            gameTime.Stop();
 
-        Console.ReadKey();
+            Console.ReadKey();
+        }
 
         this.End(racers);
     }
 
-    private void End(List<Racer> racers) {
+    private void End(IReadOnlyList<Racer> racers) {
         for (int i = 0; i < racers.Count; i++) {
             var racer = racers[i];
 

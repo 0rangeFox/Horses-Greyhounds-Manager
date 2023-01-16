@@ -1,3 +1,4 @@
+using HaGManager.Extensions;
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
 
@@ -5,8 +6,7 @@ namespace HaGManager.Views;
 
 public class TradeOfferPreviewView<A> : View where A: Animal {
 
-    static string Centered(int total, string s) => s.PadLeft((total - s.Length) / 2 + s.Length);
-    static string Centered(int total, float s) => Centered(total, s.ToString());
+    private const int Padding = 10;
 
     public TradeOfferPreviewView(ITrade<A> trade, Action? successAction = null, string successMessage = "Accept") {
         this.Header = new(this.GenerateAnimalStatsCompare(trade)) {
@@ -19,16 +19,16 @@ public class TradeOfferPreviewView<A> : View where A: Animal {
 
     private List<string> GenerateAnimalStatsCompare(ITrade<A> trade) {
         List<string> offerVisual = new() {
-            $"{' ', 10} {"Your", 22} {"Their", 12}",
-            $"{' ', 10} {"Name", 12} | {Centered(10, trade.FromAnimal.Name), -10} | {Centered(10, trade.ToAnimal.Name), -10}",
-            $"{' ', 10} {"Speed", 12} | {Centered(10, trade.FromAnimal.Speed), -10} | {Centered(10, trade.ToAnimal.Speed), -10}",
-            $"{' ', 10} {"Resistance", 12} | {Centered(10, trade.FromAnimal.Resistance), -10} | {Centered(10, trade.ToAnimal.Resistance), -10}",
-            $"{' ', 10} {"Weight", 12} | {Centered(10, trade.FromAnimal.Weight), -10} | {Centered(10, trade.ToAnimal.Weight), -10}",
-            $"{' ', 10} {"Diseases", 12} | {(trade.FromAnimal.Diseases.Count > 0 ? Centered(10, string.Join(", ", trade.FromAnimal.Diseases)) : Centered(10, "Clean")), -10} | {(trade.ToAnimal.Diseases.Count > 0 ? Centered(10, string.Join(", ", trade.ToAnimal.Diseases)) : Centered(10, "Clean")), -10}"
+            $"{' ', Padding} {"Your", 22} {"Their", 12}",
+            $"{' ', Padding} {"Name", 12} | {trade.FromAnimal.Name.Center(Padding), -Padding} | {trade.ToAnimal.Name.Center(Padding), -Padding}",
+            $"{' ', Padding} {"Speed", 12} | {trade.FromAnimal.Speed.ToString().Center(Padding), -Padding} | {trade.ToAnimal.Speed.ToString().Center(Padding), -Padding}",
+            $"{' ', Padding} {"Resistance", 12} | {trade.FromAnimal.Resistance.ToString().Center(Padding), -Padding} | {trade.ToAnimal.Resistance.ToString().Center(Padding), -Padding}",
+            $"{' ', Padding} {"Weight", 12} | {trade.FromAnimal.Weight.ToString().Center(Padding), -Padding} | {trade.ToAnimal.Weight.ToString().Center(Padding), -Padding}",
+            $"{' ', Padding} {"Diseases", 12} | {(trade.FromAnimal.Diseases.Count > 0 ? string.Join(", ", trade.FromAnimal.Diseases).Center(Padding) : "Clean".Center(Padding)), -Padding} | {(trade.ToAnimal.Diseases.Count > 0 ? string.Join(", ", trade.ToAnimal.Diseases).Center(Padding) : "Clean".Center(Padding)), -Padding}"
         };
 
         if (trade.Amount > 0)
-            offerVisual.Add($"{' ', 10} {"Plus", 12} | {"", 10} | {Centered(10, $"${trade.Amount}")}");
+            offerVisual.Add($"{' ', Padding} {"Plus", 12} | {"", Padding} | {$"${trade.Amount}".Center(Padding)}");
 
         return offerVisual;
     }

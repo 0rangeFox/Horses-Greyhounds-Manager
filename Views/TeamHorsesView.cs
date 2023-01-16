@@ -6,7 +6,7 @@ namespace HaGManager.Views;
 public class TeamHorsesView : View {
 
     private readonly Team _team = Game.Instance.ActualTeamPlaying;
-    private bool _isManaging = false;
+    private readonly bool _isManaging = false;
 
     public TeamHorsesView() {
         this._isManaging = true;

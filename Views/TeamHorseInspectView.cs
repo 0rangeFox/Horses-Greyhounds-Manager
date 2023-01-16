@@ -140,8 +140,7 @@ public class TeamHorseInspectView : View {
 
         private void ChangeTeamHorseToTrade(Horse horse) {
             this._traderHorse = horse;
-            this.Menu.RemoveRecentView();
-            this.Menu.RemoveRecentView();
+            this.Menu.RemoveRecentView(2);
         }
 
         private void UpdatePrice() {

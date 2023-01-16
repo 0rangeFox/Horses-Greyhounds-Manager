@@ -40,7 +40,7 @@ public class Horse : Animal {
         return true;
     }
 
-    public override bool Trade<A>(A? animalToTrade = null, float amount = 0f) where A: class {
+    public override bool Trade(Animal? animalToTrade = null, float amount = 0f) {
         if (this.IsInRace || this.IsInMarket || this.IsInTrade || animalToTrade == null) return false;
 
         Game.Instance.Trades.Add(new Trade<Horse>(this, amount, (animalToTrade as Horse)!));
