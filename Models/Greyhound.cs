@@ -5,7 +5,10 @@ public class Greyhound : Animal {
 
     public Greyhound(string name) : base(name) { }
 
-    public override void BuyAnimal(Team buyer) => throw new NotImplementedException();
-    public override void SellAnimal(float price, bool quickSell = false) => throw new NotImplementedException();
+    public override bool BuyAnimal(Team buyer) => throw new NotImplementedException();
+    public override bool SellAnimal(float price, bool quickSell = false) => throw new NotImplementedException();
+    public override bool Trade<A>(A? animalToTrade = null, float amount = 0f) where A : class => throw new NotImplementedException();
+    public override bool RemoveTrade() => throw new NotImplementedException();
+    public override bool AcceptTrade(Team team, float amount = 0f) => throw new NotImplementedException();
 
 }

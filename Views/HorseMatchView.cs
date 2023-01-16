@@ -4,7 +4,7 @@ namespace HaGManager.Views;
 
 public class HorseMatchView : MatchView<Horse> {
 
-    protected override Horse? JoinedAnimal => this.Match.Animals.FirstOrDefault(matchHorse => this.Team.Horses.Any(horse => horse.Status == Status.Racing && matchHorse.Equals(horse)));
+    protected override Horse? JoinedAnimal => this.Match.Animals.FirstOrDefault(matchHorse => this.Team.Horses.Any(horse => horse.IsInRace && matchHorse.Equals(horse)));
 
     public HorseMatchView(Match<Horse> match) : base(match) {}
 

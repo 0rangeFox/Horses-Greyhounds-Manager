@@ -17,10 +17,20 @@ public class TeamHorsesView : View {
     public TeamHorsesView(Action<Horse> selectHorseAction) {
         foreach (var horse in this._team.Horses) {
             var match = horse.GetMatch<Horse>();
-            this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(match != null ? $"| Preparing on match {match.ShortID}" : "")}", () => selectHorseAction(horse), horse.Status == Status.Racing));
+            this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(match != null ? $"| Preparing on match {match.ShortID}" : "")}", () => selectHorseAction(horse), horse.IsInRace));
         }
 
         this.ReturnMessage = "Return to matches";
+    }
+
+    public TeamHorsesView(Team team, Action<Horse> selectHorseAction) {
+        this._team = team;
+
+        foreach (var horse in this._team.Horses) {
+            this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy}", () => selectHorseAction(horse), horse.IsInRace));
+        }
+
+        this.ReturnMessage = "Back";
     }
 
     public override bool RefreshView() {
@@ -35,8 +45,8 @@ public class TeamHorsesView : View {
 
         this.Options.Clear();
         foreach (var horse in this._team.Horses) {
-            var match = horse.GetMatch<Horse>();
-            this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(horse.IsInMarket ? "| Selling on market" : "")}", () => this.Menu.AddView(new TeamHorseInspectView(horse)), horse.Status == Status.Racing));
+            var seller = horse.GetSeller<Horse>();
+            this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(seller != null ? $"| Selling on market for ${seller.Price}" : "")}", () => this.Menu.AddView(new TeamHorseInspectView(horse)), horse.IsInRace));
         }
 
         return true;

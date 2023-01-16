@@ -29,8 +29,9 @@ public class Game {
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
 
-    public List<ISeller<Animal>> Market;
+    public List<ISeller<Animal>> Market { get; private set; }
     public List<IMatch<Animal>> Matches { get; private set; }
+    public List<ITrade<Animal>> Trades { get; }
 
     public Game(File.GameFile gameFile) {
         Game.Instance = this;
@@ -40,6 +41,7 @@ public class Game {
         this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
         this.Market = gameFile.Market.Count > 0 ? gameFile.Market : this.GenerateHorsesToMarket();
         this.Matches = gameFile.Matches.Count > 0 ? gameFile.Matches : this.GenerateMatches();
+        this.Trades = gameFile.Trades;
 
         this.Run();
     }
@@ -125,7 +127,7 @@ public class Game {
 
     private void SaveGame() {
         Console.WriteLine("Saving the game...");
-        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Market, this.Matches));
+        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Market, this.Matches, this.Trades));
     }
 
 }

@@ -6,7 +6,7 @@ namespace HaGManager.Views;
 public class MarketInspectView<A> : View where A: Animal {
 
     private readonly Team _team = Game.Instance.ActualTeamPlaying;
-    private Seller<A> _seller;
+    private readonly Seller<A> _seller;
 
     public MarketInspectView(Seller<A> seller) {
         this._seller = seller;
