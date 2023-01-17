@@ -25,7 +25,7 @@ public class TradesView : View {
 
         this.Options.Clear();
         foreach (var trade in this.Trades) {
-            this.Options.Add(new($"Team: {trade.FromTeam.Name} | Offer: \"{trade.FromAnimal.Name}\"{(trade.Amount > 0 ? $" plus ${trade.Amount}" : "")}", () => this.Menu.AddView(new TradeOfferPreviewView<Animal>(trade, () => this.AcceptTrade(trade)))));
+            this.Options.Add(new($"Team: {trade.FromTeam.Name} | Offer: \"{trade.FromAnimal.Name}\"{(trade.Amount > 0 ? $" plus ${trade.Amount}" : "")}", () => this.Menu.AddView(new TradeOfferPreviewView<Animal>(trade, () => this.AcceptTrade(trade), () => this.CancelTrade(trade)))));
         }
 
         return true;
@@ -33,6 +33,11 @@ public class TradesView : View {
 
     private void AcceptTrade(ITrade<Animal> trade) {
         trade.ToAnimal.AcceptTrade(this._team, trade.Amount);
+        this.Menu.RemoveRecentView();
+    }
+
+    private void CancelTrade(ITrade<Animal> trade) {
+        trade.ToAnimal.CancelTrade(trade);
         this.Menu.RemoveRecentView();
     }
 

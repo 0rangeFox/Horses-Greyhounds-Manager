@@ -121,7 +121,7 @@ public class TeamHorseInspectView : View {
             this.Options.Add(new($"{(this._traderTeam == null ? "Select" : "Change")} team to trade", () => this.Menu.AddView(new TeamsView(this.ChangeTeamToTrade))));
 
             if (this._traderTeam != null) {
-                this.Options.Add(new($"{(this._traderHorse == null ? "Select" : "Change")} horse to trade", () => this.Menu.AddView(new TeamHorsesView(this._traderTeam, (horse) => this.Menu.AddView(new TradeOfferPreviewView<Horse>(new Trade<Horse>(this._horse, 0, horse), () => this.ChangeTeamHorseToTrade(horse), "Change"))))));
+                this.Options.Add(new($"{(this._traderHorse == null ? "Select" : "Change")} horse to trade", () => this.Menu.AddView(new TeamHorsesView(this._traderTeam, (horse) => this.Menu.AddView(new TradeOfferPreviewView<Horse>(new Trade<Horse>(this._horse, 0, horse), () => this.ChangeTeamHorseToTrade(horse), null, "Change"))))));
                 this.Options.Add(new($"Change amount of money", this.UpdatePrice));
 
                 if (this._traderHorse != null)

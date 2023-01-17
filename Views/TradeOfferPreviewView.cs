@@ -8,13 +8,15 @@ public class TradeOfferPreviewView<A> : View where A: Animal {
 
     private const int Padding = 10;
 
-    public TradeOfferPreviewView(ITrade<A> trade, Action? successAction = null, string successMessage = "Accept") {
+    public TradeOfferPreviewView(ITrade<A> trade, Action? successAction = null, Action? cancelAction = null, string successMessage = "Accept") {
         this.Header = new(this.GenerateAnimalStatsCompare(trade)) {
             "",
         };
 
         this.Options.Add(new (successMessage, successAction));
-        this.ReturnMessage = "Cancel";
+
+        if (cancelAction != null)
+            this.Options.Add(new ("Cancel", cancelAction));
     }
 
     private List<string> GenerateAnimalStatsCompare(ITrade<A> trade) {
