@@ -6,18 +6,25 @@ namespace HaGManager.Views;
 
 public class MainView : View {
 
-    public MainView() {
+    private File.SaveGame? _saveGame;
+
+    public override bool RefreshView() {
+        this._saveGame = File.Read();
+
         this.Options = new() {
             new("Start new game", NewGame),
-            new("Load game", LoadGame),
+            new($"Load game {(this._saveGame != null ? $"(From last save: {this._saveGame.LastTime})" : "")}", LoadGame, this._saveGame == null),
             new("Credits", Credits)
         };
+
+        return true;
     }
 
     private void NewGame() {
-        bool stopCreating = false;
-        List<Team> newTeams = new List<Team>();
+        var stopCreating = false;
+        var newTeams = new List<Team>();
 
+        Console.Clear();
         do {
             Console.WriteLine("Name of Team:");
             var name = $"{Console.ReadLine()}";
@@ -34,11 +41,11 @@ public class MainView : View {
             Console.Clear();
         } while (!stopCreating);
 
-        new Game(new File.GameFile(null, newTeams.AsReadOnly()));
+        new Game(new File.GameFile(0, newTeams.AsReadOnly()));
     }
 
     private void LoadGame() {
-        new Game(File.Read());
+        new Game(this._saveGame!.File);
     }
 
     private void Credits() {

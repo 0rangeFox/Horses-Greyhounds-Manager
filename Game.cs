@@ -10,7 +10,7 @@ namespace HaGManager;
 
 public class Game {
 
-    private static int _maxTriesToGenerateAnimalsInMarket = 3;
+    private const int MaxTriesToGenerateAnimalsInMarket = 3;
 
     public static Game Instance = null!;
 
@@ -57,7 +57,7 @@ public class Game {
     private List<ISeller<Animal>> GenerateHorsesToMarket(List<ISeller<Animal>>? market = null) {
         var newMarket = new List<ISeller<Animal>>(market ?? new List<ISeller<Animal>>());
 
-        for (int i = 0; i < _maxTriesToGenerateAnimalsInMarket; i++)
+        for (int i = 0; i < MaxTriesToGenerateAnimalsInMarket; i++)
             if (RandomExtension.Random.Next(100) > 75)
                 newMarket.Add(new Seller<Horse>(new Horse(Generators.GenerateName(RandomExtension.Random.Next(16)))));
 

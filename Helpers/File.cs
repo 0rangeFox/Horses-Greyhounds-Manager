@@ -7,7 +7,7 @@ namespace HaGManager.Helpers;
 
 public static class File {
 
-    private static readonly string CurrentDirectory = $"{Directory.GetCurrentDirectory()}/save.hg";
+    private static readonly string SaveFilePath = $"{Directory.GetCurrentDirectory()}/save.hg";
 
     [Serializable]
     public class GameFile {
@@ -19,8 +19,8 @@ public static class File {
         public List<IMatch<Animal>> Matches { get; }
         public List<ITrade<Animal>> Trades { get; }
 
-        public GameFile(int? day, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<ISeller<Animal>>? market = null, List<IMatch<Animal>>? matches = null, List<ITrade<Animal>>? trades = null) {
-            this.Day = day ?? 0;
+        public GameFile(int day, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<ISeller<Animal>>? market = null, List<IMatch<Animal>>? matches = null, List<ITrade<Animal>>? trades = null) {
+            this.Day = day;
             this.Teams = teams;
             this.ShuffledPlayTeam = shuffledPlayTeam ?? new Queue<Team>();
             this.Market = market ?? new List<ISeller<Animal>>();
@@ -30,14 +30,30 @@ public static class File {
 
     }
 
+    public class SaveGame {
+
+        public GameFile File { get; }
+        public DateTime LastTime { get; }
+
+        public SaveGame(GameFile file, DateTime lastTime) {
+            this.File = file;
+            this.LastTime = lastTime;
+        }
+
+    }
+
     public static void Write(GameFile actualGameState) {
-        using Stream stream = SysFile.Open(CurrentDirectory, FileMode.Create);
+        using Stream stream = SysFile.Open(SaveFilePath, FileMode.Create);
         new BinaryFormatter().Serialize(stream, actualGameState);
     }
 
-    public static GameFile Read() {
-        using Stream stream = SysFile.Open(CurrentDirectory, FileMode.Open);
-        return (GameFile) new BinaryFormatter().Deserialize(stream);
+    public static SaveGame? Read() {
+        try {
+            using Stream stream = SysFile.Open(SaveFilePath, FileMode.Open);
+            return new SaveGame((GameFile) new BinaryFormatter().Deserialize(stream), SysFile.GetLastWriteTime(SaveFilePath));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

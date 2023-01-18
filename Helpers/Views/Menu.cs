@@ -50,20 +50,19 @@ public class Menu {
 
         do {
             if (!this._views.TryPeek(out this._actualView)) continue;
+            if (!this.GenerateViewVisual()) continue;
 
-            if (this.GenerateViewVisual()) {
-                var keyInfo = Console.ReadKey();
+            var keyInfo = Console.ReadKey();
 
-                if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
-                    keyAction?.Invoke(this);
+            if (this._keysActions.TryGetValue(keyInfo.Key, out var keyAction))
+                keyAction?.Invoke(this);
 
-                // Handle different action for the option
-                if (keyInfo.Key != ConsoleKey.Enter) continue;
+            // Handle different action for the option
+            if (keyInfo.Key != ConsoleKey.Enter) continue;
 
-                if (this._actualIndex < this._actualView.Options.Count)
-                    this._actualView.Options[this._actualIndex].Selected?.Invoke();
-                else this._views.Pop();
-            }
+            if (this._actualIndex < this._actualView.Options.Count)
+                this._actualView.Options[this._actualIndex].Selected?.Invoke();
+            else this._views.Pop();
 
             this._actualIndex = 0;
         } while (this._views.Count > 0);
