@@ -26,7 +26,9 @@ public class GameView : View {
             new("Check my horses", () => this.Menu.AddView(new TeamHorsesView())),
             new("Level Up", LevelUp),
             new("Market", () => this.Menu.AddView(new MarketView())),
-            new("Matches", () => this.Menu.AddView(new MatchesView()))
+            new("Matches", () => this.Menu.AddView(new MatchesView())),
+            new("Staff Market", () => this.Menu.AddView(new StaffMarketView())),
+            new("Check Staff", () => this.Menu.AddView(new StaffView()))
         };
 
         var trades = Game.Instance.Trades.Count(trade => trade.ToTeam.Equals(this._team));

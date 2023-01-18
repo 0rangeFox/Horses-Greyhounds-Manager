@@ -123,6 +123,16 @@ public class Game {
         this._shuffledTeamOrderPlay = this.GetShuffledTeams();
         this.Market = this.GenerateHorsesToMarket(this.Market);
         this.Matches = this.GenerateMatches(this.Matches);
+        foreach(var team in this._shuffledTeamOrderPlay)
+        {
+            foreach (var staff in team.Staffs.Values)
+            {
+                if (staff.RemainingDays == 0)
+                {
+                    team.RemoveStaff(staff);
+                }
+            }
+        }
     }
 
     private void SaveGame() {

@@ -19,6 +19,7 @@ public class Team {
     public List<Horse> Horses { get; } = new();
     public Greyhound Greyhound { get; }
     public Dictionary<StaffType, StaffContract> Staffs = new();
+    
 
     // Stats
     public int Experience { get; private set; }
@@ -71,4 +72,25 @@ public class Team {
         return this.Experience += amount;
     }
 
+   public void AddStaffContract(StaffContract contract)
+   {
+        if (Staffs.ContainsKey(contract.Type)) {
+
+            this.Staffs[contract.Type].Duration += contract.Duration;
+         
+        }
+        else
+        {
+            this.Staffs.Add(contract.Type, contract);
+        }
+   }
+   public void RemoveStaff(StaffContract contract)
+    {
+ 
+      this.Staffs.Remove(contract.Type);
+            
+        
+
+    }
+    
 }
