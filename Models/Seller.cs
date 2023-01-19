@@ -4,6 +4,7 @@ public interface ISeller<out A> where A : Animal {
 
     public A Animal { get; }
     public float Price { get; }
+
     public Team? Team { get; }
 
 }
@@ -14,7 +15,15 @@ public class Seller<A> : ISeller<A> where A: Animal {
     public A Animal { get; }
     public float Price { get; }
 
-    public Team? Team => this.Animal.Team;
+    public Team? Team {
+        get {
+            try {
+                return this.Animal.Team;
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
 
     public Seller(A animal, float? price = null) {
         this.Animal = animal;
