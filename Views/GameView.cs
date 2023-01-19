@@ -1,4 +1,5 @@
 using HaGManager.Helpers.Views;
+using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
@@ -6,7 +7,7 @@ public class GameView : GView {
 
     public GameView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            $"Day: {Game.Instance.Day} {(Game.Instance.Event != Event.None ? $"(Event: {Game.Instance.Event.GetString()})" : "")}",
             $"Team: {this.Team.Name}"
         };
 
@@ -23,7 +24,7 @@ public class GameView : GView {
             new("Check my horses", () => this.Menu.AddView(new TeamHorsesView())),
             new("Check my Staffs", () => this.Menu.AddView(new StaffView())),
             new("Staff Market", () => this.Menu.AddView(new StaffMarketView())),
-            new("Market", () => this.Menu.AddView(new MarketView())),
+            new($"Market {(Game.Instance.Event == Event.MarketStrike ? "(Closed due to Market Strike)" : "")}", () => this.Menu.AddView(new MarketView()), Game.Instance.Event == Event.MarketStrike),
             new("Matches", () => this.Menu.AddView(new MatchesView()))
         };
 

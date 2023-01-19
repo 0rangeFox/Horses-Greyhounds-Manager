@@ -25,6 +25,7 @@ public class Game {
     }
 
     public int Day { get; private set; } = 0;
+    public Event Event { get; private set; }
     public ReadOnlyCollection<Team> Teams { get; }
     private Queue<Team> _shuffledTeamOrderPlay;
     public Team ActualTeamPlaying => this._shuffledTeamOrderPlay.Peek();
@@ -37,6 +38,7 @@ public class Game {
         Game.Instance = this;
 
         this.Day = gameFile.Day;
+        this.Event = gameFile.Event;
         this.Teams = gameFile.Teams;
         this._shuffledTeamOrderPlay = gameFile.ShuffledPlayTeam.Count > 0 ? gameFile.ShuffledPlayTeam : this.GetShuffledTeams();
         this.Market = gameFile.Market.Count > 0 ? gameFile.Market : this.GenerateHorsesToMarket();
@@ -128,11 +130,13 @@ public class Game {
             foreach (var staff in team.Staffs.Values)
                 if (staff.RemainingDays == 0)
                     team.RemoveStaff(staff.Type);
+
+        this.Event = this.Day % 3 == 0 ? Event.GetRandomEvent() : Event.None;
     }
 
     private void SaveGame() {
         Console.WriteLine("Saving the game...");
-        File.Write(new File.GameFile(this.Day, this.Teams, this._shuffledTeamOrderPlay, this.Market, this.Matches, this.Trades));
+        File.Write(new File.GameFile(this.Day, this.Event, this.Teams, this._shuffledTeamOrderPlay, this.Market, this.Matches, this.Trades));
     }
 
 }

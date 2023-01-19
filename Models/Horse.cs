@@ -16,8 +16,9 @@ public class Horse : Animal {
 
         if (seller == null || !Game.Instance.Market.Remove(seller) || seller.Team == buyer) return false;
 
-        seller.Team?.AddMoney(seller.Price);
-        buyer.RemoveMoney(seller.Price);
+        var finalPrice = seller.IsSystem ? Game.Instance.Event.GetMarketDiscount(seller.Price) : seller.Price;
+        seller.Team?.AddMoney(finalPrice);
+        buyer.RemoveMoney(finalPrice);
 
         seller.Team?.Horses.Remove(seller.Animal);
         buyer.Horses.Add(seller.Animal);

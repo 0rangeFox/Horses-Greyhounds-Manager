@@ -13,14 +13,16 @@ public static class File {
     public class GameFile {
 
         public int Day { get; }
+        public Event Event { get; }
         public ReadOnlyCollection<Team> Teams { get; }
         public Queue<Team> ShuffledPlayTeam { get; }
         public List<ISeller<Animal>> Market { get; }
         public List<IMatch<Animal>> Matches { get; }
         public List<ITrade<Animal>> Trades { get; }
 
-        public GameFile(int day, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<ISeller<Animal>>? market = null, List<IMatch<Animal>>? matches = null, List<ITrade<Animal>>? trades = null) {
+        public GameFile(int day, Event @event, ReadOnlyCollection<Team> teams, Queue<Team>? shuffledPlayTeam = null, List<ISeller<Animal>>? market = null, List<IMatch<Animal>>? matches = null, List<ITrade<Animal>>? trades = null) {
             this.Day = day;
+            this.Event = @event;
             this.Teams = teams;
             this.ShuffledPlayTeam = shuffledPlayTeam ?? new Queue<Team>();
             this.Market = market ?? new List<ISeller<Animal>>();

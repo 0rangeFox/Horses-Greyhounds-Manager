@@ -23,7 +23,7 @@ public class MarketInspectView<A> : GView where A: Animal {
             $"Diseases: {(this._seller.Animal.Diseases.Count > 0 ? string.Join(", ", this._seller.Animal.Diseases) : "Clean")}"
         };
 
-        this.Options.Add(new ViewOption("Buy this horse", this.BuyAnimal, this.Team.Balance < this._seller.Price));
+        this.Options.Add(new ViewOption("Buy this horse", this.BuyAnimal, this.Team.Balance < (this._seller.IsSystem ? Game.Instance.Event.GetMarketDiscount(this._seller.Price) : this._seller.Price)));
         this.ReturnMessage = "Return to market";
     }
 

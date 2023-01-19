@@ -20,7 +20,7 @@ public class MarketView : GView {
         this.Options.Clear();
         foreach (var seller in Game.Instance.Market)
             this.Options.Add(new ViewOption(
-                $"Name: {seller.Animal.Name} | Price: ${(seller.Price > 0 ? $"{seller.Price}" : "Free")} | Seller: {(seller.Team != null ? seller.Team.Name : "System")}",
+                $"Name: {seller.Animal.Name} | Price: ${(seller.Price > 0 ? $"{(seller.IsSystem ? Game.Instance.Event.GetMarketDiscount(seller.Price) : seller.Price)}" : "Free")} | Seller: {(seller.IsSystem ? $"System {(Game.Instance.Event is Event.MarketDiscount25 or Event.MarketDiscount50 or Event.MarketDiscount75 ? $"| In SALE! ({Game.Instance.Event.GetString().Substring(7)})" : "")}" : seller.Team!.Name)}",
                 () => this.Menu.AddView(new MarketInspectView<Horse>(seller as Seller<Horse>)),
                 seller.Team != null && seller.Team == this.Team
             ));

@@ -7,6 +7,8 @@ public interface ISeller<out A> where A : Animal {
 
     public Team? Team { get; }
 
+    public bool IsSystem { get; }
+
 }
 
 [Serializable]
@@ -24,6 +26,8 @@ public class Seller<A> : ISeller<A> where A: Animal {
             }
         }
     }
+
+    public bool IsSystem => this.Team == null;
 
     public Seller(A animal, float? price = null) {
         this.Animal = animal;
