@@ -24,11 +24,10 @@ public class GameView : View {
     public override bool RefreshView() {
         this.Options = new() {
             new("Check my horses", () => this.Menu.AddView(new TeamHorsesView())),
-            new("Level Up", LevelUp),
-            new("Market", () => this.Menu.AddView(new MarketView())),
-            new("Matches", () => this.Menu.AddView(new MatchesView())),
+            new("Check my Staffs", () => this.Menu.AddView(new StaffView())),
             new("Staff Market", () => this.Menu.AddView(new StaffMarketView())),
-            new("Check Staff", () => this.Menu.AddView(new StaffView()))
+            new("Market", () => this.Menu.AddView(new MarketView())),
+            new("Matches", () => this.Menu.AddView(new MatchesView()))
         };
 
         var trades = Game.Instance.Trades.Count(trade => trade.ToTeam.Equals(this._team));
@@ -36,16 +35,6 @@ public class GameView : View {
             this.Options.Add(new($"Trade Offers ({trades}x)", () => this.Menu.AddView(new TradesView())));
 
         return true;
-    }
-
-    private void LevelUp() {
-        this._team.AddExperience(1000);
-        Console.WriteLine($"Balance: {this._team.Balance}");
-        this._team.AddExperience(2000);
-        Console.WriteLine($"Balance: {this._team.Balance}");
-        this._team.AddExperience(5000);
-        Console.WriteLine($"Balance: {this._team.Balance}");
-        Console.ReadKey();
     }
 
 }
