@@ -5,8 +5,6 @@ namespace HaGManager.Views;
 
 public class StaffMarketView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
-
     public StaffMarketView() {
         this.ReturnMessage = "Return to menu";
     }
@@ -14,8 +12,8 @@ public class StaffMarketView : View {
     public override bool RefreshView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
-            $"Balance: {this._team.Balance}",
+            $"Team: {this.Team.Name}",
+            $"Balance: {this.Team.Balance}",
             ""
         };
 
@@ -30,16 +28,14 @@ public class StaffMarketView : View {
 
         private static readonly int[] Times = { 1, 3, 7, 15, 30 };
 
-        private readonly Team _team = Game.Instance.ActualTeamPlaying;
-
         public DaysSelector(StaffType staff) {
             foreach (var day in Times)
-                this.Options.Add(new ViewOption($"{day} Day: {(int) staff * day}", () => this.BuyContract(staff, day), this._team.Balance < (int) staff * day));
+                this.Options.Add(new ViewOption($"{day} Day: {(int) staff * day}", () => this.BuyContract(staff, day), this.Team.Balance < (int) staff * day));
         }
 
         private void BuyContract(StaffType staff, int day) {
-            this._team.RemoveMoney((int) staff * day);
-            this._team.AddStaffContract(new StaffContract(staff, day));
+            this.Team.RemoveMoney((int) staff * day);
+            this.Team.AddStaffContract(new StaffContract(staff, day));
             this.Menu.RemoveRecentView();
         }
 

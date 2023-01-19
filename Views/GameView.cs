@@ -1,16 +1,13 @@
 using HaGManager.Helpers.Views;
-using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
 public class GameView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
-
     public GameView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}"
+            $"Team: {this.Team.Name}"
         };
 
         this.Footer = new() {
@@ -30,7 +27,7 @@ public class GameView : View {
             new("Matches", () => this.Menu.AddView(new MatchesView()))
         };
 
-        var trades = Game.Instance.Trades.Count(trade => trade.ToTeam.Equals(this._team));
+        var trades = Game.Instance.Trades.Count(trade => trade.ToTeam.Equals(this.Team));
         if (trades > 0)
             this.Options.Add(new($"Trade Offers ({trades}x)", () => this.Menu.AddView(new TradesView())));
 

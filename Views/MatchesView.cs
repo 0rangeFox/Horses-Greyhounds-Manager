@@ -5,12 +5,10 @@ namespace HaGManager.Views;
 
 public class MatchesView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
-
     public MatchesView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
+            $"Team: {this.Team.Name}",
             $"Total Matches: {Game.Instance.Matches.Count}",
             ""
         };

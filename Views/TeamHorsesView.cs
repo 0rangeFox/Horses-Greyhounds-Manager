@@ -5,7 +5,6 @@ namespace HaGManager.Views;
 
 public class TeamHorsesView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
     private readonly bool _isManaging = false;
 
     public TeamHorsesView() {
@@ -15,7 +14,7 @@ public class TeamHorsesView : View {
     }
 
     public TeamHorsesView(Action<Horse> selectHorseAction) {
-        foreach (var horse in this._team.Horses) {
+        foreach (var horse in this.Team.Horses) {
             var match = horse.GetMatch<Horse>();
             this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(match != null ? $"| Preparing on match {match.ShortID}" : "")}", () => selectHorseAction(horse), horse.IsInRace));
         }
@@ -24,11 +23,10 @@ public class TeamHorsesView : View {
     }
 
     public TeamHorsesView(Team team, Action<Horse> selectHorseAction) {
-        this._team = team;
+        this.Team = team;
 
-        foreach (var horse in this._team.Horses) {
+        foreach (var horse in this.Team.Horses)
             this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy}", () => selectHorseAction(horse), horse.IsInRace));
-        }
 
         this.ReturnMessage = "Back";
     }
@@ -38,13 +36,13 @@ public class TeamHorsesView : View {
 
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
-            $"Horses owned: {this._team.Horses.Count}",
+            $"Team: {this.Team.Name}",
+            $"Horses owned: {this.Team.Horses.Count}",
             ""
         };
 
         this.Options.Clear();
-        foreach (var horse in this._team.Horses) {
+        foreach (var horse in this.Team.Horses) {
             var seller = horse.GetSeller<Horse>();
             this.Options.Add(new ($"Name: {horse.Name} | {horse.Energy} {(seller != null ? $"| Selling on market for ${seller.Price}" : "")}", () => this.Menu.AddView(new TeamHorseInspectView(horse)), horse.IsInRace));
         }

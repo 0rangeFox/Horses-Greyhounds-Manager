@@ -1,11 +1,8 @@
 ﻿using HaGManager.Helpers.Views;
-using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
 public class StaffView : View {
-
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
 
     public StaffView() {
         this.ReturnMessage = "Return to menu";
@@ -14,10 +11,10 @@ public class StaffView : View {
     public override bool RefreshView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}"
+            $"Team: {this.Team.Name}"
         };
 
-        foreach (var staff in _team.Staffs.Values)
+        foreach (var staff in this.Team.Staffs.Values)
             this.Options.Add(new ViewOption($"Staff type: {staff.Type} | Days left: {staff.RemainingDays}", null, true));
 
         return true; 

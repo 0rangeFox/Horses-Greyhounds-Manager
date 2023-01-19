@@ -5,7 +5,6 @@ namespace HaGManager.Views;
 
 public class MarketInspectView<A> : View where A: Animal {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
     private readonly Seller<A> _seller;
 
     public MarketInspectView(Seller<A> seller) {
@@ -13,8 +12,8 @@ public class MarketInspectView<A> : View where A: Animal {
 
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
-            $"Balance: {this._team.Balance}",
+            $"Team: {this.Team.Name}",
+            $"Balance: {this.Team.Balance}",
             "",
             "- Horse:",
             $"Name: {this._seller.Animal.Name}",
@@ -24,12 +23,12 @@ public class MarketInspectView<A> : View where A: Animal {
             $"Diseases: {(this._seller.Animal.Diseases.Count > 0 ? string.Join(", ", this._seller.Animal.Diseases) : "Clean")}"
         };
 
-        this.Options.Add(new ViewOption("Buy this horse", this.BuyAnimal, this._team.Balance < this._seller.Price));
+        this.Options.Add(new ViewOption("Buy this horse", this.BuyAnimal, this.Team.Balance < this._seller.Price));
         this.ReturnMessage = "Return to market";
     }
 
     private void BuyAnimal() {
-        this._seller.Animal.BuyAnimal(this._team);
+        this._seller.Animal.BuyAnimal(this.Team);
         this.Menu.RemoveRecentView();
     } 
 

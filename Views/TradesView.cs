@@ -6,9 +6,7 @@ namespace HaGManager.Views;
 
 public class TradesView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
-
-    private ReadOnlyCollection<ITrade<Animal>> Trades => Game.Instance.Trades.Where(trade => trade.ToTeam.Equals(this._team)).ToList().AsReadOnly();
+    private ReadOnlyCollection<ITrade<Animal>> Trades => Game.Instance.Trades.Where(trade => trade.ToTeam.Equals(this.Team)).ToList().AsReadOnly();
     private int TradesAmount => this.Trades.Count;
 
     public TradesView() {
@@ -18,21 +16,20 @@ public class TradesView : View {
     public override bool RefreshView() {
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
+            $"Team: {this.Team.Name}",
             $"Total of trades offers: {this.TradesAmount}",
             ""
         };
 
         this.Options.Clear();
-        foreach (var trade in this.Trades) {
+        foreach (var trade in this.Trades)
             this.Options.Add(new($"Team: {trade.FromTeam.Name} | Offer: \"{trade.FromAnimal.Name}\"{(trade.Amount > 0 ? $" plus ${trade.Amount}" : "")}", () => this.Menu.AddView(new TradeOfferPreviewView<Animal>(trade, () => this.AcceptTrade(trade), () => this.CancelTrade(trade)))));
-        }
 
         return true;
     }
 
     private void AcceptTrade(ITrade<Animal> trade) {
-        trade.ToAnimal.AcceptTrade(this._team, trade.Amount);
+        trade.ToAnimal.AcceptTrade(this.Team, trade.Amount);
         this.Menu.RemoveRecentView();
     }
 

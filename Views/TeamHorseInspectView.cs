@@ -5,7 +5,6 @@ namespace HaGManager.Views;
 
 public class TeamHorseInspectView : View {
 
-    private readonly Team _team = Game.Instance.ActualTeamPlaying;
     private readonly Horse _horse;
 
     public TeamHorseInspectView(Horse horse) {
@@ -15,15 +14,15 @@ public class TeamHorseInspectView : View {
     }
 
     public override bool RefreshView() {
-        if (!this._team.Horses.Contains(this._horse)) {
+        if (!this.Team.Horses.Contains(this._horse)) {
             this.Menu.RemoveRecentView();
             return false;
         }
 
         this.Header = new() {
             $"Day: {Game.Instance.Day}",
-            $"Team: {this._team.Name}",
-            $"Balance: {this._team.Balance}",
+            $"Team: {this.Team.Name}",
+            $"Balance: {this.Team.Balance}",
             "",
             $"- Inspecting the horse: {this._horse.Name}",
             $"Energy: {this._horse.Energy}",
@@ -51,7 +50,7 @@ public class TeamHorseInspectView : View {
         return true;
     }
 
-    private void RemoveFromMarket() => this._horse.BuyAnimal(this._team);
+    private void RemoveFromMarket() => this._horse.BuyAnimal(this.Team);
 
     private void RemoveFromTrade() => this._horse.RemoveTrade();
 

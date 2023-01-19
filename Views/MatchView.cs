@@ -5,7 +5,6 @@ namespace HaGManager.Views;
 
 public abstract class MatchView<A> : View where A: Animal {
 
-    protected readonly Team Team = Game.Instance.ActualTeamPlaying;
     protected readonly Match<A> Match;
 
     protected A? SelectedAnimal = null;

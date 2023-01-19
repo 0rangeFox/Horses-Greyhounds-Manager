@@ -22,7 +22,7 @@ public enum Status {
 [Serializable]
 public abstract class Animal {
 
-    private static float _quickSellFee = .25f; // In Percentage
+    private const float QuickSellFee = .25f; // In Percentage
 
     public Guid ID { get; } = Guid.NewGuid();
 
@@ -40,7 +40,23 @@ public abstract class Animal {
     public bool IsInMarket => Game.Instance.Market.Exists(seller => seller.Animal.Equals(this));
     public bool IsInTrade => Game.Instance.Trades.Exists(trade => trade.FromAnimal.Equals(this));
     public float Price => ((this.Speed * this.Resistance) / this.Weight) * 100;
-    public float QuickSellPrice => this.Price * (1f - _quickSellFee);
+    public float QuickSellPrice => this.Price * (1f - QuickSellFee);
+
+    protected Animal(string name) {
+        this.Name = name;
+        this.Speed = RandomExtension.NextSingle(5, 30);
+        this.Resistance = RandomExtension.NextSingle(5, 30);
+        this.Weight = RandomExtension.NextSingle(10, 30);
+        this.Diseases = new List<Disease>();
+    }
+
+    public abstract bool BuyAnimal(Team buyer);
+    public abstract bool SellAnimal(float price, bool quickSell = false);
+    public abstract bool Trade(Animal? animalToTrade = null, float amount = 0f);
+    public abstract bool RemoveTrade();
+    public abstract bool AcceptTrade(Team team, float amount = 0f);
+
+    public virtual bool CancelTrade(ITrade<Animal> trade) => Game.Instance.Trades.Remove(trade);
 
     public Match<A>? GetMatch<A>() where A: Animal {
         if (this.IsInRace)
@@ -65,22 +81,6 @@ public abstract class Animal {
                     return trade;
         return null;
     }
-
-    protected Animal(string name) {
-        this.Name = name;
-        this.Speed = RandomExtension.NextSingle(5, 30);
-        this.Resistance = RandomExtension.NextSingle(5, 30);
-        this.Weight = RandomExtension.NextSingle(10, 30);
-        this.Diseases = new List<Disease>();
-    }
-
-    public abstract bool BuyAnimal(Team buyer);
-    public abstract bool SellAnimal(float price, bool quickSell = false);
-    public abstract bool Trade(Animal? animalToTrade = null, float amount = 0f);
-    public abstract bool RemoveTrade();
-    public abstract bool AcceptTrade(Team team, float amount = 0f);
-
-    public virtual bool CancelTrade(ITrade<Animal> trade) => Game.Instance.Trades.Remove(trade);
 
     public override int GetHashCode() => this.ID.GetHashCode();
     public override bool Equals(object? obj) => obj is Animal animal && this.ID.Equals(animal.ID);
