@@ -2,7 +2,7 @@
 
 namespace HaGManager.Views; 
 
-public class StaffView : View {
+public class StaffView : GView {
 
     public StaffView() {
         this.ReturnMessage = "Return to menu";

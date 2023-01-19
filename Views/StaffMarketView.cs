@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class StaffMarketView : View {
+public class StaffMarketView : GView {
 
     public StaffMarketView() {
         this.ReturnMessage = "Return to menu";
@@ -24,7 +24,7 @@ public class StaffMarketView : View {
         return true;
     }
 
-    private class DaysSelector : View {
+    private class DaysSelector : GView {
 
         private static readonly int[] Times = { 1, 3, 7, 15, 30 };
 

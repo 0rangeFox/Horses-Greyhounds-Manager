@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class MarketInspectView<A> : View where A: Animal {
+public class MarketInspectView<A> : GView where A: Animal {
 
     private readonly Seller<A> _seller;
 

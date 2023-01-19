@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class MatchesView : View {
+public class MatchesView : GView {
 
     public MatchesView() {
         this.Header = new() {

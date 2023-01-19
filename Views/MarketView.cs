@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class MarketView : View {
+public class MarketView : GView {
 
     public MarketView() {
         this.ReturnMessage = "Return to menu";

@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class TeamGreyhoundsView : View {
+public class TeamGreyhoundsView : GView {
 
     public TeamGreyhoundsView(Action<Greyhound> selectGreyhoundAction, bool removeIfRacing = false) {
         var greyhound = this.Team.Greyhound;

@@ -2,7 +2,7 @@ using HaGManager.Helpers.Views;
 
 namespace HaGManager.Views; 
 
-public class GameView : View {
+public class GameView : GView {
 
     public GameView() {
         this.Header = new() {

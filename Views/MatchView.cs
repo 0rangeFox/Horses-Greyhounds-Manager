@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public abstract class MatchView<A> : View where A: Animal {
+public abstract class MatchView<A> : GView where A: Animal {
 
     protected readonly Match<A> Match;
 

@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class TeamHorsesView : View {
+public class TeamHorsesView : GView {
 
     private readonly bool _isManaging = false;
 

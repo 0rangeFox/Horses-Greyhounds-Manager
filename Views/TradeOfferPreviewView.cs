@@ -4,7 +4,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class TradeOfferPreviewView<A> : View where A: Animal {
+public class TradeOfferPreviewView<A> : GView where A: Animal {
 
     private const int Padding = 10;
 

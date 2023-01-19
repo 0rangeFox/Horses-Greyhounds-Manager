@@ -4,7 +4,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class TradesView : View {
+public class TradesView : GView {
 
     private ReadOnlyCollection<ITrade<Animal>> Trades => Game.Instance.Trades.Where(trade => trade.ToTeam.Equals(this.Team)).ToList().AsReadOnly();
     private int TradesAmount => this.Trades.Count;

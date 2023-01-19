@@ -3,7 +3,7 @@ using HaGManager.Models;
 
 namespace HaGManager.Views; 
 
-public class TeamsView : View {
+public class TeamsView : GView {
 
     public TeamsView(Action<Team> selectTeamAction) {
         foreach (var team in Game.Instance.Teams)
