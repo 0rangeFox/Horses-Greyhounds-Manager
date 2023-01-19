@@ -20,6 +20,8 @@ public class Team {
     public Greyhound Greyhound { get; }
     public Dictionary<StaffType, StaffContract> Staffs { get; } = new();
 
+    public bool TrainedAlready { get; set; } = false;
+
     // Stats
     public int Experience { get; private set; }
     public int Wins { get; private set; }

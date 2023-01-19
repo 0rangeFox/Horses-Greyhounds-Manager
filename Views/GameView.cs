@@ -22,7 +22,7 @@ public class GameView : GView {
     public override bool RefreshView() {
         this.Options = new() {
             new("Check my horses", () => this.Menu.AddView(new TeamHorsesView())),
-            new("Check my Staffs", () => this.Menu.AddView(new StaffView())),
+            new($"Staffs {(Game.Instance.Event == Event.StaffStrike ? "(Closed due to Staff Strike)" : "")}", () => this.Menu.AddView(new StaffView())),
             new("Staff Market", () => this.Menu.AddView(new StaffMarketView())),
             new($"Market {(Game.Instance.Event == Event.MarketStrike ? "(Closed due to Market Strike)" : "")}", () => this.Menu.AddView(new MarketView()), Game.Instance.Event == Event.MarketStrike),
             new("Matches", () => this.Menu.AddView(new MatchesView()))

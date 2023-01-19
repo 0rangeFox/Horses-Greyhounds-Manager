@@ -1,12 +1,12 @@
 namespace HaGManager.Models;
-
+[Serializable]
 public enum StaffType {
 
     Healer = 100,
     Trainer = 150
 
 }
-
+[Serializable]
 public class StaffContract {
 
     public StaffType Type { get; }

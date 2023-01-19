@@ -113,12 +113,12 @@ public class Match<A> : IMatch<A> where A: Animal {
         if (this.RemainingDays - 1 >= 1 && !this.IsFull) return;
 
         var racers = new List<Racer>();
-        racers.AddRange(this._animals.Select((animal, i) => new Racer(animal, i + 1)));
 
-        if (Game.Instance.Event != Event.SkipDay && this.Animals.Count > 1) {
+        if (this.Animals.Count > 1) {
             var gameTime = new Stopwatch();
             var gameTrack = this.GenerateTrack();
             var gameTrackDistance = gameTrack.Length - 1;
+            racers.AddRange(this._animals.Select((animal, i) => new Racer(animal, i + 1)));
 
             gameTime.Start();
             for (int i = 3 - 1; i > 0; i--) {
@@ -160,16 +160,14 @@ public class Match<A> : IMatch<A> where A: Animal {
         this.End(racers);
     }
 
-    private void End(IReadOnlyList<Racer> racers, bool rewards = true) {
+    private void End(IReadOnlyList<Racer> racers) {
         for (int i = 0; i < racers.Count; i++) {
             var racer = racers[i];
 
             this.RemoveAnimal(racer.Animal);
 
-            if (!rewards) continue;
-
-            racer.Team.AddMoney(Game.Instance.Event.GetDoubled(this.MoneyRewards[i]));
-            racer.Team.AddExperience(Game.Instance.Event.GetDoubled(this.ExperienceRewards[i]));
+            racer.Team.AddMoney(this.MoneyRewards[i]);
+            racer.Team.AddExperience(this.ExperienceRewards[i]);
         }
 
         Game.Instance.Matches.Remove(this);

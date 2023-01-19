@@ -1,3 +1,4 @@
+using HaGManager.Extensions;
 using HaGManager.Helpers.Views;
 using HaGManager.Models;
 
@@ -35,20 +36,45 @@ public class TeamHorseInspectView : GView {
         };
 
         this.Options.Clear();
-        if (this._horse.IsInMarket) {
-            var seller = this._horse.GetSeller<Horse>()!;
-            this.Options.Add(new($"Remove from market | Selling on market for ${seller.Price}", this.RemoveFromMarket));
-        } else
-            this.Options.Add(new("Sell", () => this.Menu.AddView(new SellMenu(this._horse)), this._horse.IsInRace || this._horse.IsInTrade));
+        if (this.Team.Staffs.ContainsKey(StaffType.Trainer))
+        {
+            this.Options.Add(new("Train this horse", this.TrainHorse, this.Team.TrainedAlready == true));
+        }
+
+        if (this._horse.Diseases.Count > 0 && this.Team.Staffs.ContainsKey(StaffType.Healer)) {
+
+            this.Options.Add(new("Heal", this.HealHorse));
+        }
 
         if (this._horse.IsInTrade) {
             var trade = this._horse.GetTrade<Horse>()!;
             this.Options.Add(new($"Remove from trade | Trading for the horse \"{trade.ToAnimal.Name}\" from team \"{trade.ToTeam.Name}\"{(trade.Amount > 0 ? $" plus ${trade.Amount}" : "")}", this.RemoveFromTrade));
         } else
             this.Options.Add(new("Trade", () => this.Menu.AddView(new TradeMenu(this._horse)), this._horse.IsInRace || this._horse.IsInMarket));
+        
+        if (this._horse.IsInMarket)
+        {
+            var seller = this._horse.GetSeller<Horse>()!;
+            this.Options.Add(new($"Remove from market | Selling on market for ${seller.Price}", this.RemoveFromMarket));
+        }
+        else
+            this.Options.Add(new("Sell", () => this.Menu.AddView(new SellMenu(this._horse)), this._horse.IsInRace || this._horse.IsInTrade));
 
         return true;
     }
+
+    private void HealHorse()
+    {
+        _horse.Diseases.Clear();
+    }
+
+    private void TrainHorse()
+    {
+        _horse.UpgradeAnimal();
+        this.Team.TrainedAlready = true;
+        
+    }
+
 
     private void RemoveFromMarket() => this._horse.BuyAnimal(this.Team);
 
@@ -153,6 +179,8 @@ public class TeamHorseInspectView : GView {
             this._horse.Trade(this._traderHorse, this._amount);
             this.Menu.RemoveRecentView();
         }
+
+      
 
     }
 
