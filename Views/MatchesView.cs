@@ -7,7 +7,7 @@ public class MatchesView : GView {
 
     public MatchesView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}",
             $"Total Matches: {Game.Instance.Matches.Count}",
             ""

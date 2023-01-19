@@ -11,7 +11,7 @@ public class MarketInspectView<A> : GView where A: Animal {
         this._seller = seller;
 
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}",
             $"Balance: {this.Team.Balance}",
             "",

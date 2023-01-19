@@ -10,7 +10,7 @@ public class StaffView : GView {
 
     public override bool RefreshView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}"
         };
 

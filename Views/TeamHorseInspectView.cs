@@ -21,7 +21,7 @@ public class TeamHorseInspectView : GView {
         }
 
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}",
             $"Balance: {this.Team.Balance}",
             "",
@@ -119,7 +119,7 @@ public class TeamHorseInspectView : GView {
 
         public override bool RefreshView() {
             this.Header = new() {
-                $"Day: {Game.Instance.Day}",
+                Game.Instance.DayDescription,
                 $"Team: {this.Team.Name}",
                 "",
                 "- Trade details:",

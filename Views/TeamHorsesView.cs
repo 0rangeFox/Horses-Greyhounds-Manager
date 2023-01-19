@@ -35,7 +35,7 @@ public class TeamHorsesView : GView {
         if (!this._isManaging) return true;
 
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}",
             $"Horses owned: {this.Team.Horses.Count}",
             ""

@@ -57,6 +57,14 @@ public class Team {
         return this.Balance;
     }
 
+    public void AddStaffContract(StaffContract contract) {
+        if (Staffs.ContainsKey(contract.Type))
+            this.Staffs[contract.Type].Duration += contract.Duration;
+        else this.Staffs.Add(contract.Type, contract);
+    }
+
+    public bool RemoveStaff(StaffType type) => this.Staffs.Remove(type);
+
     public int AddExperience(int amount) {
         foreach (var reward in Rewards)
             if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience < reward.Key && this.Experience + amount >= reward.Key)
@@ -65,12 +73,7 @@ public class Team {
         return this.Experience += amount;
     }
 
-   public void AddStaffContract(StaffContract contract) {
-        if (Staffs.ContainsKey(contract.Type))
-            this.Staffs[contract.Type].Duration += contract.Duration;
-        else this.Staffs.Add(contract.Type, contract);
-    }
-
-   public bool RemoveStaff(StaffType type) => this.Staffs.Remove(type);
+    public int AddWin() => this.Wins++;
+    public int AddLose() => this.Loses++;
 
 }

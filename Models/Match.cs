@@ -168,6 +168,9 @@ public class Match<A> : IMatch<A> where A: Animal {
 
             if (!rewards) continue;
 
+            if (i == 0) racer.Team.AddWin();
+            else racer.Team.AddLose();
+
             racer.Team.AddMoney(Game.Instance.Event.GetDoubled(this.MoneyRewards[i]));
             racer.Team.AddExperience(Game.Instance.Event.GetDoubled(this.ExperienceRewards[i]));
         }

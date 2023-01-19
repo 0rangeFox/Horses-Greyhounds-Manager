@@ -20,7 +20,7 @@ public abstract class MatchView<A> : GView where A: Animal {
 
     public override bool RefreshView() {
         this.Header = new() {
-            $"Day: {Game.Instance.Day}",
+            Game.Instance.DayDescription,
             $"Team: {this.Team.Name}",
             "",
             $"Match ID: {this.Match.ID} ({this.Match.ShortID})",

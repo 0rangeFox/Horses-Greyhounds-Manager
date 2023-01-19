@@ -34,8 +34,11 @@ public class Game {
     public List<IMatch<Animal>> Matches { get; private set; }
     public List<ITrade<Animal>> Trades { get; }
 
+    public string DayDescription =>
+        $"Day: {Instance.Day} {(Instance.Event != Event.None ? $"(Event: {Instance.Event.GetString()})" : "")}";
+
     public Game(File.GameFile gameFile) {
-        Game.Instance = this;
+        Instance = this;
 
         this.Day = gameFile.Day;
         this.Event = gameFile.Event;
