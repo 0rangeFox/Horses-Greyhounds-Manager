@@ -85,11 +85,10 @@ public abstract class Animal {
     public override int GetHashCode() => this.ID.GetHashCode();
     public override bool Equals(object? obj) => obj is Animal animal && this.ID.Equals(animal.ID);
 
-    public void UpgradeAnimal()
-    {
-        this.Weight += RandomExtension.NextSingle(-2, 3);
+    public void UpgradeAnimal() {
         this.Speed += RandomExtension.NextSingle(1, 3);
         this.Resistance += RandomExtension.NextSingle(1, 3);
+        this.Weight += RandomExtension.NextSingle(-3, 3);
     }
 
 }

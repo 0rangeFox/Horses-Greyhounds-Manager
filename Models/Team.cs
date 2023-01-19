@@ -33,12 +33,6 @@ public class Team {
         this.Greyhound = new Greyhound(greyhoundName);
     }
 
-    // 1000 = 1 Horse Slot
-    // 2000 
-    // 3000
-    // 4000 = 1 Horse Slot <-
-    // 5000 = 1 Horse Slot
-
     public int GetMaxHorsesSlots() {
         var count = 1;
 
@@ -64,11 +58,9 @@ public class Team {
     }
 
     public int AddExperience(int amount) {
-        foreach (var reward in Rewards) {
-            if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience < reward.Key && this.Experience + amount >= reward.Key) {
+        foreach (var reward in Rewards)
+            if (reward.Value is Reward.Money500 or Reward.Money1000 && this.Experience < reward.Key && this.Experience + amount >= reward.Key)
                 this.Balance += (int) reward.Value;
-            }
-        }
 
         return this.Experience += amount;
     }

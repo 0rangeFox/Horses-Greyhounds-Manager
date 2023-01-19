@@ -125,15 +125,14 @@ public class Game {
         this._shuffledTeamOrderPlay = this.GetShuffledTeams();
         this.Market = this.GenerateHorsesToMarket(this.Market);
         this.Matches = this.GenerateMatches(this.Matches);
-        foreach (var team in this.Teams)
-        {
-            team.TrainedAlready = false;
-        }
 
-        foreach(var team in this._shuffledTeamOrderPlay)
+        foreach (var team in this._shuffledTeamOrderPlay) {
+            team.TrainedAlready = false;
+
             foreach (var staff in team.Staffs.Values)
                 if (staff.RemainingDays == 0)
                     team.RemoveStaff(staff.Type);
+        }
 
         this.Event = this.Day % 3 == 0 ? Event.GetRandomEvent() : Event.None;
     }
